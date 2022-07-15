@@ -28,12 +28,18 @@ namespace core
 
     // usar builder para contruit o loop_steps
     template <class state_, size_t steps>
+    //TODO usar variadic template here. pass to tuple and visitor
     struct loop_steps_s
     {
         
         loop_step deveria ser um statefull functor template T get_state();
         elimina state_
         como elimina steps recebendo do constructor ???
+        usar variadic template visitor para gerenciar states baseado em diferentes loop_step
+
+        state has a tuple according to loop template arguments
+        state.accept();
+
         array<loop_step<state_>, steps> loop_steps;
         using steps_perf = pair<string, time_duration>;
         array<steps_perf, steps + 1> perf_hooks; //+1 to add before_sleep performance hook
