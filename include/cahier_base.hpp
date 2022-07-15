@@ -16,6 +16,11 @@
         // intervals, scan, etc
     };
 
+    fazer cahier
+        scoped_cahier
+        cahier_unnamed
+        cahier_unnamed_unnamed
+
     template<class T, class OPT, class key_t = std::string const&>
     class cahier : loop_control{
 

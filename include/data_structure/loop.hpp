@@ -36,6 +36,7 @@ namespace core
         elimina state_
         como elimina steps recebendo do constructor ???
         usar variadic template visitor para gerenciar states baseado em diferentes loop_step
+        a tuple, os tipes vao ser o retorno do step, e nao os steps
 
         state has a tuple according to loop template arguments
         state.accept();
