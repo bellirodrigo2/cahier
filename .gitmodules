@@ -1,0 +1,6 @@
+[submodule "ext?EASTL"]
+	path = ext?EASTL
+	url = https://github.com/electronicarts/EASTL.git
+[submodule "ext/EASTL"]
+	path = ext/EASTL
+	url = https://github.com/electronicarts/EASTL.git
