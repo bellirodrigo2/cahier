@@ -7,6 +7,10 @@ SET(CMAKE_CXX_FLAGS "-Wall -Werror")
 
 project(cahier_root)
 
+add_subdirectory(ext/EASTL)
+# //precisa includer includes do eastl aqui ???
+# resta saber como inclui headers
+
 # BUILD LIBRARY libcahier.a
 # add_library(cahier
   # STATIC

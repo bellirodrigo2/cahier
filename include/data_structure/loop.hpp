@@ -9,92 +9,79 @@
 
 namespace core
 {
-    using std::string;
     using std::array;
-    using std::vector;
-    using std::pair;
-    using std::make_pair;
     using std::for_each;
+    using std::make_pair;
+    using std::pair;
+    using std::string;
+    using std::vector;
 
-    using acum = long;
-    using keyType = string;
-    using step_name = string;
-    using removeds = vector<keyType>;
+    template <class Arg>
+    using loop_step = void (*)(Arg &);
 
-    using loop_state = pair<acum, removeds>;
-
-    template<class Arg>
-    using loop_gstep = void (*)(Arg &);
-
-    //todo ARG poderia ser pair<string, size>
-    using loop_step_pair_state = loop_gstep<loop_state>;
+    //TODO da pra deixar os perf hook em outro lyer ????
+    //TODO ou usar compiler definition on perf_hook codes
 
     using clock = std::chrono::steady_clock;
     using time_duration = std::chrono::milliseconds;
     using time_point = std::chrono::time_point<clock>;
 
-    template <size_t steps>
+    // usar builder para contruit o loop_steps
+    template <class state_, size_t steps>
+    struct loop_steps_s
+    {
+        
+        loop_step deveria ser um statefull functor template T get_state();
+        elimina state_
+        como elimina steps recebendo do constructor ???
+        array<loop_step<state_>, steps> loop_steps;
+        using steps_perf = pair<string, time_duration>;
+        array<steps_perf, steps + 1> perf_hooks; //+1 to add before_sleep performance hook
+    };
+
+    template <class state_, size_t steps>
     class loop
     {
-        using task_loop_step = loop_step_pair_state;
+        state_ state;
+        loop_steps_s<state_, steps> loop_steps;
+        loop_step<state_> before_sleep;
 
-        // 3 = 1 before hook, 2 task, 3 after hook
-        using full_loop_step = array<task_loop_step,3>;
+        void sleep(time_point &time)
+        {
+            // calculate if based on state, sleep should be shorter than ime_point(time)
+            auto until = time;
+            std::this_thread::sleep_until(until);
+        }
 
-        array<pair<step_name, full_loop_step>, steps> loop_steps;
-        task_loop_step before_sleep;
-        
-       void sleep(loop_state& state,  time_point& time){
-
-        //calculate if based on state, sleep should be shorter than ime_point(time)
-        auto until = time;
-
-        std::this_thread::sleep_until(until);
-       
-       }
-    
     public:
-        loop(array<full_loop_step, steps> loop):loop_steps(loop){}
-        
+        loop(loop_steps_s<state_, steps> l_steps, loop_step<state_> b_sleep) : loop_steps(l_steps), before_sleep(b_sleep) {}
+
         void start()
         {
-            auto state = make_pair(0L, vector<keyType>{});
-            auto time_hooks = array<step_name,steps>{};
-
-            auto run_task = [&state](task_loop_step* task_step){
+            auto run_task = [&](loop_step<state_> *task_step)
+            {
+                // time hook here
                 (*task_step)(state);
-            };
- 
-            auto run_loop = [](pair<step_name, full_loop_step>& full_step){
-                //time hook usando full_step.first
-                for_each(full_step.second.begin(), full_step.second.end(),run_task);
-                //time hook usando full_step.first
+                // time hook here
             };
 
-            while (true){
-    
-                for_each(loop_steps.begin(), loop_steps.end(),run_loop);
+            while (true)
+            {
 
-                //time hook usando "_main_loop"
+                for_each(loop_steps.begin(), loop_steps.end(), run_task);
+
+                // time hook usando "_main_loop"
                 before_sleep(state);
-                //time hook usando "_main_loop"
+                // time hook usando "_main_loop"
 
-                //todo circular buffer para acum, removeds and timehooks ???
+                // todo circular buffer para acum, removeds and timehooks ???
 
                 state.first = 0;
                 state.second.clear();
 
                 sleep(state);
-                
             }
         }
     };
-
-    steps:
-    -update cache
-    -time scan - interval based
-    -pubsub dispatching - interval based
-    -cluster mngmnt
-    -io (socket and/or file)
 
 }
