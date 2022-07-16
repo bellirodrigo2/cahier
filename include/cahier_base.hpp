@@ -2,6 +2,9 @@
 #include <memory>
 #include <future>
 
+client code should...
+USE APIs AND FACTORIES/Builders ONLY
+
     template<class OPT, class scope_t = std::string>
     class scope_option :public OPT{
         scope_t scope;

@@ -9,7 +9,14 @@
 #endif
 
 namespace visitor{
-    //fazer visitor design pattern com variadic template
+
+
+
+
+    fazer visitor design pattern com variadic template
+    a classe que for usar um visitor, deveria inheritar dele (e ele deve ser stateless ???)
+
+
     template <class visitor>
     struct visitable
     {
