@@ -27,11 +27,13 @@ namespace task_queue
     };
 
     template <typename T>                        //K deveria ser um unnamed hash map
-    class task_queue_aggr : public task_queue<T, hash_map<K,T>>{
+    class task_queue_ext : public task_queue<T, hash_map<K,T>>{
 
         public:
 
         void aggregate(K key, T val); // agregate data to existing task
+        void update(K key, T val); // update data on existing task
+
     };
 
     template <typename T>

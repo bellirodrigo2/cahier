@@ -3,12 +3,12 @@
 
 #include <vector>
 
-namespace task_queue
+namespace vector_ext
 {
     using std::vector;
 
     template <typename T>
-    class vector_null :public vector<T>{};
+    class vector_optional :public vector<T>{};
 }
 
 #endif
