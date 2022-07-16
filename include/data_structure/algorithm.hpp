@@ -1,0 +1,1 @@
+algortmos for new data structures based on std::algorithms
