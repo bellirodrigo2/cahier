@@ -1,19 +1,24 @@
 #ifndef _TASK_QUEUE_HPP_
 #define _TASK_QUEUE_HPP_
 
+#include <memory>
+#include <vector>
+
 namespace task_queue
 {
-    template <typename T>
-    class TaskQueue
+    using std::vector;
+
+    template <typename T, typename Q = vector<T>>
+    class task_queue
     {
-        using stack_ptr = shared_ptr<vector<T>>;
+        using s_ptr std::shared_ptr<T>;
 
-        stack_ptr stack;
+        Q stack;
 
-        stack_ptr steal()
+        Q steal()
         {
             auto temp = std::move(stack);
-            stack = make_unique<vector<T>>();
+            stack = make_unique<Q>();
             return temp;
         };
 
@@ -21,8 +26,16 @@ namespace task_queue
         void push(T t) { stack->push_back(t); };
     };
 
+    template <typename T>                        //K deveria ser um unnamed hash map
+    class task_queue_aggr : public task_queue<T, hash_map<K,T>>{
+
+        public:
+
+        void aggregate(K key, T val); // agregate data to existing task
+    };
+
     template <typename T>
-    class taskQueueSafe : public TaskQueue<T>
+    class taskQueueSafe : public task_queue<T>
     {
 
         mutex m;

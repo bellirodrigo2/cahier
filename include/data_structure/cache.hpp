@@ -59,6 +59,7 @@ namespace cache
         using cnode_uptr  = unique_ptr<cnode_>;
         using cnode_sptr  = shared_ptr<cnode_>;
 
+        //list id replicado nos nodes constexpr
         ext_intrusive_list<T, nHDR, pop_if_impl> list;
         hash_map<key_t, cnode_> col;
 
