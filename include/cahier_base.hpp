@@ -4,6 +4,7 @@
 
 client code should...
 USE APIs AND FACTORIES/Builders ONLY
+NUNCA USAR IF/ELSE, FOR e WHILE!!!!!!!!!!!!
 
     template<class OPT, class scope_t = std::string>
     class scope_option :public OPT{

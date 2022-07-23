@@ -10,12 +10,10 @@
 
 namespace visitor{
 
-
-
-
-    fazer visitor design pattern com variadic template
-    a classe que for usar um visitor, deveria inheritar dele (e ele deve ser stateless ???)
-
+    // fazer visitor design pattern com variadic template
+    // a classe que for usar um visitor, deveria inheritar dele (e ele deve ser stateless ???)
+    // um file para cada par de classe<visitor<classe>> ?? curious template nao sei oq
+    
 
     template <class visitor>
     struct visitable

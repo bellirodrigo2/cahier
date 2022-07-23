@@ -7,7 +7,15 @@ SET(CMAKE_CXX_FLAGS "-Wall -Werror")
 
 project(cahier_root)
 
-add_subdirectory(ext/EASTL)
+find_package( Boost COMPONENTS program_options REQUIRED )
+
+include_directories( ${Boost_INCLUDE_DIR} )
+
+add_executable( myTets tste.cpp )
+
+# TARGET_LINK_LIBRARIES( anyExecutable LINK_PUBLIC ${Boost_LIBRARIES} )
+
+# add_subdirectory(ext/EASTL)
 
 # BUILD LIBRARY libcahier.a
 # add_library(cahier
