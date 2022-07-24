@@ -102,11 +102,7 @@ namespace base_cahier
 		void assign(iterator &iter, const value_type &v)
 		{
 			touch(iter);
-
-			//todo visitor here
 			iter->accept(update_visitor<Value>{v});
-			// iter->data = v;
-			// iter->data.push_back(v);
 		}
 
 		// CONTAINS
@@ -116,8 +112,18 @@ namespace base_cahier
 		}
 
 		// REMOVE
-		bool erase(const key_type &k) {}
-		bool erase(iterator &it) {}
+		bool erase(const key_type &k){
+			auto iter = m_map.find(k);
+			if (iter == m_map.end())
+				return false;
+			erase(iter);
+			return true;
+		}
+
+		bool erase(iterator &iter){
+			//remove from list
+			//remove from map
+		}
 
 		void release_memory(size_t size){
 			auto iter = begin(); //todo begin ou rbegin ?????
@@ -149,7 +155,14 @@ namespace base_cahier
 		}
 
 	private:
-		bool touch(const key_type &k){}
+		bool touch(const key_type &k){
+			auto iter = m_map.find(k);
+			if (iter == m_map.end())
+				return false;
+			touch(iter);
+			return true;
+		}
+
 		void touch(iterator &it){}
 
 		void make_space(size_t size){

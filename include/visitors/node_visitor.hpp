@@ -14,9 +14,11 @@ namespace visitor_impl{
         void visit(deque_node<T>);
         void visit(list_node<T>);
         // void visit(pub_sub_node<T>);
+        // iter->data = v;
+		// iter->data.push_back(v);
 
         private:
-        T new_val;
+        T& new_val;
     };
 
     template<typename T>
@@ -30,7 +32,6 @@ namespace visitor_impl{
         private:
         size_t size;
     };
-
 
     template<typename T>
     struct sizeof_visitor : public node_visitor<T>{
