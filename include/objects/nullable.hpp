@@ -1,1 +1,0 @@
-vectpr and array
