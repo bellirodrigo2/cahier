@@ -1,0 +1,46 @@
+https://python-dependency-injector.ets-labs.org/examples/fastapi-sqlalchemy.html
+
+*FAZER TESTES DE CIMA PRA BAIXO COM INMEMORY
+    capturar os erros 422 validação...se for erro no path, com obj_type desconhecido...tem que gerar erro de url e não de validação
+    fazer todos os exceptons to nivel do router
+    fazer mapa para links dependendo do tipo do objeto
+    mocks   
+        https://pytest-with-eric.com/mocking/pytest-mocking/#Mock-A-Class
+        https://pytest-with-eric.com/mocking/python-magicmock-raise-exception/
+        https://pytest-with-eric.com/mocking/pytest-monkeypatch/
+        https://docs.python.org/3/library/unittest.mock.html
+
+FAZER A FUNÇÃO ABAIXO COM pydantic
+def check_obj_type(obj: Obj, expected_type: ObjEnum):
+    if obj.obj_type != expected_type:
+        raise InconsistentTypeError(expected=expected_type, actual=obj.obj_type)
+
+fazer factory: objEnum: Classe Especifica
+
+Obj type tem que ser frozen
+
+fazer handlers de erro em nivel de aplicação, serviço, etc
+assistir video do arjancodes sobre exception de fastapi
+Override the default exception handlers
+https://fastapi.tiangolo.com/tutorial/handling-errors/
+
+usar tree_lib como repo de teste
+
+
+amanha colocar umas metas....terminar o asset service até nivel do repo...completo em sqlalchemy.....stream service, etc
+
+implementar attributes
+
+#PENSAR EM COMO BOOTSTRAP SQLITE
+
+
+
+
+
+integrar com ferramentas de time series (dart,kats, tsfresh)
+integrar com fERRAMENtas de DNN (tensorflow, pytorch)
+
+-conversions (arrow, etc)
+-connection to TS db´s (batch get/set)
+-client streaming (websocket+arrow)
+-model streaming (kafka, redis)

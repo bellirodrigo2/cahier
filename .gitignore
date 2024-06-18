@@ -1,0 +1,16 @@
+#venv
+env/
+
+#python cache
+**/__pycache__/
+
+# pytest
+.pytest_cache
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+#pycharm
+.idea/

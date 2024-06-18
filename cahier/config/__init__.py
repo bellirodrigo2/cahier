@@ -1,0 +1,1 @@
+from .depinj import make_asset_service
