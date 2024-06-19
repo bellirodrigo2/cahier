@@ -31,10 +31,6 @@ class RequestObserver:
     def get_http(self, req):
         print(f'GET request on {req.data}')
 
-######################################################################
-##### assistir aula de ontem em 01:06.... sobre o projeto da central telefonica e inversao de dependencia
-########################################################################
-
 def func_ex(word: Event):
     print(f'{word.data} HAS ARRIVED TOO')
 

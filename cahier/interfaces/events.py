@@ -6,7 +6,7 @@ from typing import Protocol, Callable
 
 class EventInterface(Protocol):
     @property
-    def data(self) -> :
+    def data(self) -> None:
         pass
     
     def fire(self) -> None:

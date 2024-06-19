@@ -11,10 +11,23 @@ https://python-dependency-injector.ets-labs.org/examples/fastapi-sqlalchemy.html
         https://docs.python.org/3/library/unittest.mock.html
 
 *** colocar o depinj.py dentro da pasta do service
+DE PRA FAZER n x Items
 
-DEFINIR
+mudar o service....tirar o pre_proc e post_proc e colocar eventos pre e pos
+
+https://engineering.atspotify.com/2018/01/testing-of-microservices/
+
+https://www.youtube.com/watch?v=6FwD0iAe3tI
+
+*ler https://stackoverflow.com/questions/17801344/understanding-metaclass-and-inheritance-in-python
+
+DEFINIR------ colocar o gerador de eventos, dentro do asset service.... pre_get_one, post_get_one
 class ReadOneEvent(Event):
+fazer uma exception... onread event
+evento tras o momento que eh chamado pra nao dar problema de async
     
+fazer os testes e olhar coverage,,,,ir criando testes para aumentar o coverage
+
     def __init__(self, data: Tuple[ObjEnum, WebId]):
         Event('read_one', data)
 No Asset Service
@@ -29,6 +42,12 @@ def check_obj_type(obj: Obj, expected_type: ObjEnum):
 fazer factory: objEnum: Classe Especifica
 
 Obj type tem que ser frozen
+
+
+######################################################################
+##### assistir aula de ontem em 01:06.... sobre o projeto da central telefonica e inversao de dependencia
+########################################################################
+
 
 fazer handlers de erro em nivel de aplicação, serviço, etc
 assistir video do arjancodes sobre exception de fastapi
