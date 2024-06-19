@@ -6,6 +6,7 @@ from . import Node, Item
 
 ################################################################################
 
+#fazer o poprion ObjEnum como Factory
 
 obj_map: dict[ObjEnum, Type[Obj]] = {
     ObjEnum.node: Node,

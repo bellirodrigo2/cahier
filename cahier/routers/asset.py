@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, Path, Body, Query
 from cahier import AssetServiceInterface
 from cahier import WebId, Obj, SingleOutput, ListOutput, ObjEnum
 
-from cahier import get_fire_event, make_asset_service
+from cahier import get_fire_event, get_asset_service
 
 ################################################################################
 
@@ -16,7 +16,7 @@ router = APIRouter(
 
 @router.get('/{target}/{webid}', response_model=SingleOutput)
 def read_one(
-    service: AssetServiceInterface = Depends(make_asset_service),
+    service: AssetServiceInterface = Depends(get_asset_service),
     fire_event = Depends(get_fire_event),
     target: ObjEnum = Path(title='...'),
     webid: WebId = Path(title='...'),
@@ -33,7 +33,7 @@ def check_path(target: ObjEnum, children: ObjEnum):
 @router.get('/{target}/{parent_webid}/{children}', response_model=SingleOutput, 
             dependencies=[Depends(check_path)])
 def read_all(
-    service: AssetServiceInterface = Depends(make_asset_service),
+    service: AssetServiceInterface = Depends(get_asset_service),
     fire_event = Depends(get_fire_event),
     target: ObjEnum = Path(title='...'),
     children: ObjEnum = Path(title='...'),
@@ -59,7 +59,7 @@ def read_all(
 @router.post('/{target}/{parent_webid}/{children}',
             dependencies=[Depends(check_path)])
 def create_one(
-    service: AssetServiceInterface = Depends(make_asset_service),
+    service: AssetServiceInterface = Depends(get_asset_service),
     target: ObjEnum = Path(title='...'),
     parent_webid: WebId = Path(title='...'),
     children: ObjEnum = Path(title='...'),

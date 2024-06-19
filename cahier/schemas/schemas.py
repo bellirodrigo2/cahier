@@ -1,7 +1,7 @@
 """ """
 from typing import Annotated, Generator, List, Any
 
-from pydantic import BaseModel, Field, BeforeValidator, ConfigDict, Json, AnyUrl
+from pydantic import BaseModel, Field, BeforeValidator, ConfigDict, AnyUrl
 from pydantic import field_validator, field_serializer
 
 from .webid import WebId, hasWebId, make_webid
@@ -82,7 +82,7 @@ class ObjLabel(BaseModel):
         serialization_alias='Attributes',
     )]
 
-    metadata: Annotated[Json, Field(
+    metadata: Annotated[dict[str, Any], Field(
         alias='Metadata',
         serialization_alias='Metadata',
         default={}

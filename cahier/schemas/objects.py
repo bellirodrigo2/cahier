@@ -109,8 +109,8 @@ types_list = {x.obj_type(): x.obj_type() for x in nested_classes}
 class CompareObjEnum:
     
     def is_valid_child(self, child):
-        possible_parent = map_type_to_parent[child.value]
-        if possible_parent and self.value in possible_parent:
+        possible_parent = map_type_to_parent[child.name]
+        if possible_parent and self.name in possible_parent:
             return
         raise TypeHierarchyError(parent_type=self, children_type=child)
 
