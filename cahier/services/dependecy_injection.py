@@ -4,12 +4,13 @@ from functools import partial
 
 from ..database import get_memory_db
 from ..repositories import InMemoryRepository
+from ..schemas import ObjEnum, WebId
 # from ..database import get_sqlalchemy_db, sqlalchemy_bootstrap
 # from ..repositories import SQLAlchemyRepository
 
-from ..services import AssetService
-
-from ..events import Event, RequestObserver
+from .asset import AssetService, PreReadOneEvent, PostReadOneEvent
+from .events import Observer
+from ..interfaces import EventInterface
 
 ################################################################################
 # SQLALCHEMY
@@ -35,20 +36,12 @@ make_repo = partial(InMemoryRepository, get_memory_db)
 make_asset_service = partial(AssetService, get_repo = make_repo)
 
 ################################################################################
-# Make Event Service
+# Register Events
 ################################################################################
 
-ro = RequestObserver()
-# fazer uma classe aqui com todos os metodos
-# ro.observe('event1',  ro.get_http)
+def pre_read(ev: Tuple[ObjEnum, WebId]):
+    print('Firing', ev[0], ev[1])
 
-ro.observe('read_one', lambda ev: print(ev.data))
+# como fazer para o callback ter o mesmo tipo de "data" dor event ????
 
-class ReadOneEvent(Event):
-    
-    def __init__(self, data: Tuple[ObjEnum, WebId]):
-        Event('read_one', data)
-
-def fire_read_one():
-    return ReadOneEvent
-# a funcao deve usar o mesmo tipo em data que foi colocado no event
+Observer.observe(event_name=PreReadOneEvent, callback=pre_read)

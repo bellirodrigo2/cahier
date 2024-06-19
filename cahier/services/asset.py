@@ -1,26 +1,41 @@
 """"""
-from typing import Callable, Tuple
+from typing import Tuple, Callable
 
-from ..interfaces import RepositoryInterface
-from ..interfaces import AssetServiceInterface
+from cahier import AssetServiceInterface, RepositoryInterface
+from cahier import WebId, ObjEnum, Obj, ObjInput, SingleOutput, ListOutput
 
-from . import ObjEnum
-from ..schemas import WebId, Obj, ObjInput, SingleOutput, ListOutput
-from . import  make_single_output, make_list_output
+from cahier import  make_single_output, make_list_output
+
+from .events import Event
 
 ################################################################################
 
+PreReadOneEvent = Event[Tuple[ObjEnum, WebId]]
+PostReadOneEvent = Event[Obj]
+
+class PreReadOneEvent(PreReadOneEvent):
+    """"""
+    
+    name: str = 'pre_read_one'
+    
+    def __init__(self, target: ObjEnum, webid: WebId) -> None:
+        super().__init__(self.name, [target, webid])
+
+class PostReadOneEvent(PostReadOneEvent):
+    """"""
+    
+    name: str = 'post_read_one'
+    
+    def __init__(self, obj: Obj) -> None:
+        super().__init__(self.name, obj)
+        
 class AssetService:
     """"""
     
     def __init__(self,
             get_repo: Callable[[], RepositoryInterface],
-            pre_proc: Callable[[], AssetServiceInterface] | None = None,
-            post_proc: Callable[[frozenset[Obj]], AssetServiceInterface] | None = None,
         ) -> None:
-        self.__pre_proc = pre_proc
         self.__get_repo = get_repo
-        self.__post_proc = post_proc
     
     def _get_one(self, webid: WebId)->Obj:
         repo: RepositoryInterface = self.__get_repo()
@@ -33,18 +48,11 @@ class AssetService:
     
     def get_one_by_webid(self, webid: WebId, target_type: ObjEnum | None = None)->SingleOutput:  
         
-        if self.__pre_proc:
-            self.__pre_proc().get_one_by_webid(webid=webid, target_type=target_type)
-        
         obj: Obj = self._get_one(webid=webid)
         
         if target_type is not None:
             # FAZER CAST PARA Obj especifico de pydantic
             check_obj_type(obj, target_type)
-        
-        if self.__post_proc:
-            post_service: AssetServiceInterface = self.__post_proc(frozenset([obj]))
-            post_service.get_one_by_webid(webid, target_type)
         
         return make_single_output(obj)
 
@@ -57,14 +65,7 @@ class AssetService:
             parent = self._get_one(parent_webid)
             check_obj_type(parent, parent_type)
         
-        if self.__pre_proc:            
-            self.__pre_proc().get_all_by_parentwebid_and_type(children_type, parent_webid, parent_type)
-        
         objs: list[Obj] = self._get_all(parent_webid = parent_webid)
-        
-        if self.__post_proc:    
-            post_service: AssetServiceInterface = self.__post_proc(frozenset(objs))
-            post_service.get_all_by_parentwebid_and_type(children_type, parent_webid, parent_type)
         
         return make_list_output(objs)
     

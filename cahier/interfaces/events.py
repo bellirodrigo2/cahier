@@ -4,15 +4,20 @@ from typing import Protocol, Callable
 ################################################################################
 
 
-class EventInterface(Protocol):
+class EventInterface[T](Protocol):
+    
     @property
-    def data(self) -> None:
+    def name(self) -> str:
+        pass
+    
+    @property
+    def data(self) -> T:
         pass
     
     def fire(self) -> None:
         pass
 
 
-class ObserverInterface(Protocol):
-    def observe(self, event_name: str, callback: Callable[[EventInterface], None]):
+class ObserverInterface[T](Protocol):
+    def observe(self, event: EventInterface[T], callback: Callable[[T], None]):
         pass

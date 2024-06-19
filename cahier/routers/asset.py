@@ -1,12 +1,12 @@
 """ Routers for Cahier Builder """
-from typing import Annotated
+from typing import Annotated, Tuple
 
-from fastapi import APIRouter, Depends, Path, Body, Query, Request
+from fastapi import APIRouter, Depends, Path, Body, Query
 
 from cahier import AssetServiceInterface, EventInterface
-from cahier import WebId, ObjInput, SingleOutput, ListOutput, ObjEnum
+from cahier import WebId, Obj, ObjInput, SingleOutput, ListOutput, ObjEnum
 
-from  ..config.depinj import make_asset_service, fire_read_one
+from  ..services.depinj import make_asset_service, fire_read_one
 
 ################################################################################
 
@@ -16,15 +16,17 @@ router = APIRouter(
 
 @router.get('/{target}/{webid}', response_model=SingleOutput)
 def read_one(
-    req: Request,
     service: AssetServiceInterface = Depends(make_asset_service),
-    event: EventInterface = Depends(fire_read_one),
+    pre_event: EventInterface = Depends(EventInterface[Tuple[ObjEnum, WebId]]),
+    post_event: EventInterface = Depends(PostReadOneEvent),
     target: ObjEnum = Path(title='...'),
     webid: WebId = Path(title='...'),
     selectedFields: Annotated[str | None, Query()] = None,
 ):
-    event('http', [target, webid])
-    return service.get_one_by_webid(target_type=target, webid=webid)
+    pre_event(target, webid)
+    obj: Obj = service.get_one_by_webid(target_type=target, webid=webid)
+    # nao de target e webid ????????????
+    post_event(obj)
 
 def check_path(target: ObjEnum, children: ObjEnum):
     pass
@@ -33,6 +35,8 @@ def check_path(target: ObjEnum, children: ObjEnum):
             dependencies=[Depends(check_path)])
 def read_all(
     service: AssetServiceInterface = Depends(make_asset_service),
+    pre_event: EventInterface = Depends(EventInterface),
+    post_event: EventInterface = Depends(PostReadOneEvent),
     target: ObjEnum = Path(title='...'),
     children: ObjEnum = Path(title='...'),
     parent_webid: WebId = Path(title='...'),
@@ -47,9 +51,9 @@ def read_all(
     selectedFields: str | None = Query()
     
 ):
-    req.query_params
-    
-    return service.get_all_by_parentwebid_and_type(parent_type=target, children_type=children, parent_webid=parent_webid)
+    pre_event(target, children, parent_webid)    
+    obs: list[Obj] = service.get_all_by_parentwebid_and_type(parent_type=target, children_type=children, parent_webid=parent_webid)
+    post_event(obs)
 
 @router.post('/{target}/{parent_webid}/{children}',
             dependencies=[Depends(check_path)])
