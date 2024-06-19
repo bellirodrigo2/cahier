@@ -1,71 +1,101 @@
 """ Base Objects and hierarchies """
+from typing import Annotated
 from enum import Enum
 
+from .timestamp import Timestamp
 from .base_objects import _ServerObj, _BaseObj, _ElementObj, _ItemObj, _NodeObj, _RootObj
-from .base_objects import map_base_to_parent
+from .base_objects import map_base_to_parent, Field
 
 ################################################################################
 
 
-class DataServerObj(_ServerObj):
+class DataServer(_ServerObj):
     @classmethod
     def obj_type(cls)->str:
         return 'dataserver'
-class AssetServerObj(_ServerObj):
+    
+class AssetServer(_ServerObj):
     @classmethod
     def obj_type(cls)->str:
         return 'assetserver'
 
 
-class DataBaseObj(_RootObj):
+class DataBase(_RootObj):
     @classmethod
     def obj_type(cls)->str:
         return 'database'
-class UserObj(_RootObj):
+class User(_RootObj):
     @classmethod
     def obj_type(cls)->str:
         return 'user'
 
 
-class ViewObj(_ElementObj):
+class View(_ElementObj):
     @classmethod
     def obj_type(cls)->str:
         return 'view'
-class ProcObj(_ElementObj):
+class Proc(_ElementObj):
     @classmethod
     def obj_type(cls)->str:
         return 'proc'
-class CollectionsObj(_ElementObj):
+class Collections(_ElementObj):
     @classmethod
     def obj_type(cls)->str:
         return 'collections'
-class EnumSetObj(_ElementObj):
+class EnumSet(_ElementObj):
     @classmethod
     def obj_type(cls)->str:
         return 'enumset'
-class KeyValueObj(_ElementObj):
+class KeyValue(_ElementObj):
     @classmethod
     def obj_type(cls)->str:
         return 'keyvalue'
-class CounterObj(_ElementObj):
+class Counter(_ElementObj):
     @classmethod
     def obj_type(cls)->str:
         return 'counter'
 
+pathField = Annotated[str, Field(
+        alias='Path',
+        serialization_alias='Path',
+    )]
 
-class NodeObj(_NodeObj):
+class Node(_NodeObj):
     @classmethod
     def obj_type(cls)->str:
         return 'node'
-# class TemplateNode(_NodeObj):
-    # pass
+    
+    path: pathField
+    
+    template: Annotated[str, Field(
+        alias='Template',
+        serialization_alias='Template',
+        default=''
+    )]
+class DataTypeEnum(Enum):
+    string = str
+    float = float
+    int = int
+    boolean = bool
+    byte = bytes
+    timestamp = Timestamp
 
-
-class ItemObj(_ItemObj):
+class Item(_ItemObj):
     @classmethod
     def obj_type(cls)->str:
         return 'item'
-
+    
+    path: pathField
+    
+    data_type: Annotated[DataTypeEnum, Field(
+        alias='DataType',
+        serialization_alias='DataType'
+    )]
+    
+    data_source: Annotated[str, Field(
+        alias='DataSource',
+        serialization_alias='DataSource',
+    )]
 ################################################################################
 
 # get all classes derived from _BaseObj

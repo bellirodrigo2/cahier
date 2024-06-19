@@ -4,13 +4,13 @@ from functools import partial
 
 from ..database import get_memory_db
 from ..repositories import InMemoryRepository
-from ..schemas import ObjEnum, WebId
+from ..schemas import ObjEnum, WebId, Obj
 # from ..database import get_sqlalchemy_db, sqlalchemy_bootstrap
 # from ..repositories import SQLAlchemyRepository
 
-from .asset import AssetService, PreReadOneEvent, PostReadOneEvent
-from .events import Observer
-from ..interfaces import EventInterface
+from .asset import AssetService
+
+from .events import add_event_handler, make_event
 
 ################################################################################
 # SQLALCHEMY
@@ -39,9 +39,12 @@ make_asset_service = partial(AssetService, get_repo = make_repo)
 # Register Events
 ################################################################################
 
-def pre_read(ev: Tuple[ObjEnum, WebId]):
-    print('Firing', ev[0], ev[1])
+def pre_read_one(args: Tuple[WebId, ObjEnum | None]):
+    print('Firing', args[0], args[1])
+add_event_handler(event_name='pre_read_one', callback=pre_read_one)
 
-# como fazer para o callback ter o mesmo tipo de "data" dor event ????
+def post_read_one(arg: Tuple[Obj]):
+    print('Firing', arg[0])
+add_event_handler(event_name='post_read_one', callback=post_read_one)
 
-Observer.observe(event_name=PreReadOneEvent, callback=pre_read)
+get_fire_event = partial(make_event, error_handler=lambda x: print(x))

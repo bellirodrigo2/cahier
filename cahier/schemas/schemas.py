@@ -1,12 +1,10 @@
 """ """
-from typing import Annotated, Generator, List
-# from abc import ABC, abstractmethod
+from typing import Annotated, Generator, List, Any
 
 from pydantic import BaseModel, Field, BeforeValidator, ConfigDict, Json, AnyUrl
 from pydantic import field_validator, field_serializer
 
 from .webid import WebId, hasWebId, make_webid
-from .objects import ObjEnum, _BaseObj
 
 SPECIAL_CHARS = ['*', '?', ';', '{', '}', '[', ']', '|', '\\', '`', "'", '"', ':']
 PATH_DELIM = '/'
@@ -49,7 +47,7 @@ strip_str = BeforeValidator(lambda x: str.strip(str(x)))
 
 ################################################################################
 
-class ObjLabel(BaseModel, _BaseObj):
+class ObjLabel(BaseModel):
     
     name: Annotated[str, strip_str , Field(
         description='Name Field Description',
@@ -78,11 +76,11 @@ class ObjLabel(BaseModel, _BaseObj):
         validation_alias='Id'
     )]
     
-    # attributes: Annotated[Attribute, Field(
-    #     description='',
-    #     alias='Attributes',
-    #     serialization_alias='Attributes',
-    # )]
+    attributes: Annotated[dict[str, Any], Field(
+        description='',
+        alias='Attributes',
+        serialization_alias='Attributes',
+    )]
 
     metadata: Annotated[Json, Field(
         alias='Metadata',
@@ -96,27 +94,10 @@ class ObjLabel(BaseModel, _BaseObj):
         default=[]
     )]
         
-    # @field_serializer('obj_type')
-    # def serialize_type(self)->str:
-        # return self.obj_type()
-        
     @field_validator("name")
     @classmethod
     def check_special_char(_, name: str) -> str:
         return check_invalid_char(name)
-    
-    # def is_of_type(self, expected_type: ObjEnum):
-        # """"""
-        # if self.obj_type != expected_type:
-            # raise InconsistentTypeError(expected=expected_type.name, actual=self.obj_type())
-
-class InconsistentTypeError(Exception):
-    """ failure in the 'expected' vs 'actual' type """
-    
-    def __init__(self, expected: str, actual: str):
-        self.message = f'Type Expectation Error. \
-            Expected a type {expected=}, but got a(n) {actual=}'
-        self.name = 'InconsistentTypeError'
 
 # se for obj, usar defaukt_factory, se for update nao
 class ObjInput(ObjLabel):

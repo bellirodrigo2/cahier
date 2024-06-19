@@ -1,31 +1,23 @@
 """"""
 from typing import Callable
 
-################################################################################
+class EventHandlerError(Exception):
+    pass
 
-class Event[T]:
+event_handlers = {}
+
+def add_event_handler(event_name: str, callback: Callable[..., None]):
     """"""
-    def __init__(self, name: str, data: T, autofire: bool = True):
-        self.data = data
-        self.name = name
-        if autofire:
-            self.fire()
+    event_handlers[event_name] = callback
 
-    def fire(self):
-        obs = Observer()._observables
-        if self.name in obs:
-            obs[self.name](self)
-
-class Observer[T]:
+def make_event(error_handler: Callable[[Exception], None] | None):
     """"""
-
-    __instance = None
-
-    def __new__(cls):
-        if cls.__instance is None:
-            cls.__instance = super().__new__(cls)
-            cls.__instance._observables = {}
-        return cls.__instance
-
-    def observe(self, event: Event[T], callback: Callable[[T], None]):
-        self.__instance._observables[event.name] = callback
+    def fire_event(name: str, *args, **kwargs):
+        if name in event_handlers:
+            try:
+                event_handlers[name]( *args, **kwargs)
+            except Exception as e:
+                if error_handler:
+                    error_handler(e)
+                raise EventHandlerError()
+    return fire_event

@@ -11,13 +11,13 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from fastapi import Request, Response
 
 from cahier.main import app
-from cahier.config import make_asset_service
+from cahier import make_asset_service
 
 from cahier.schemas import ObjEnum
 
 ################################################################################
 
-mock_asset_service = Mock()
+# mock_asset_service = Mock()
 
 def override_make_asset_service():
     return make_asset_service

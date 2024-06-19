@@ -12,8 +12,8 @@ obj_map: dict[ObjEnum, Type[Obj]] = {
     ObjEnum.item: Item
 }
 
-def make_typed_obj(tgt_type: ObjEnum, obj: Obj)->Obj:
-    pass
+def cast_obj(tgt_type: ObjEnum, obj: Obj)->Obj:
+    return obj_map[tgt_type](**obj)
 
 
 ################################################################################

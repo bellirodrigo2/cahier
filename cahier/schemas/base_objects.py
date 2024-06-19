@@ -2,6 +2,8 @@
 from enum import Enum
 from abc import ABC, abstractmethod
 
+from pydantic import BaseModel, Field
+
 ################################################################################
 
 class BaseType(Enum):
@@ -14,21 +16,15 @@ class BaseType(Enum):
 
 map_base_to_parent = {i.name: i.value for i in BaseType}
 
-
-class _BaseObj(ABC):
+class _BaseObj(BaseModel, ABC):
     @classmethod
     @abstractmethod
     def obj_type(cls)->str:
         pass
-        # return cls.__name__.lower()
     @classmethod
     @abstractmethod
     def base_type(cls)->BaseType:
         pass
-    # @classmethod
-    # def base_name(cls)->str:
-    #     return cls.base_type().name
-
 
 class _ServerObj(_BaseObj):
     @classmethod
