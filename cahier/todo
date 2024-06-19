@@ -10,6 +10,17 @@ https://python-dependency-injector.ets-labs.org/examples/fastapi-sqlalchemy.html
         https://pytest-with-eric.com/mocking/pytest-monkeypatch/
         https://docs.python.org/3/library/unittest.mock.html
 
+*** colocar o depinj.py dentro da pasta do service
+
+DEFINIR
+class ReadOneEvent(Event):
+    
+    def __init__(self, data: Tuple[ObjEnum, WebId]):
+        Event('read_one', data)
+No Asset Service
+
+SonarQube — Static Code Analysis
+
 FAZER A FUNÇÃO ABAIXO COM pydantic
 def check_obj_type(obj: Obj, expected_type: ObjEnum):
     if obj.obj_type != expected_type:

@@ -1,7 +1,7 @@
 """ In Memory Database """
 from typing import Protocol
 
-from ..schemas import WebId, Obj
+from cahier import WebId, Obj
 
 ################################################################################
 

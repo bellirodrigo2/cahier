@@ -4,10 +4,9 @@ from typing import Callable, Tuple
 from ..interfaces import RepositoryInterface
 from ..interfaces import AssetServiceInterface
 
-from ..schemas import ObjEnum, map_type_to_parent
+from . import ObjEnum
 from ..schemas import WebId, Obj, ObjInput, SingleOutput, ListOutput
-from ..schemas import  make_single_output, make_list_output
-from ..schemas import check_obj_hierarchy
+from . import  make_single_output, make_list_output
 
 ################################################################################
 

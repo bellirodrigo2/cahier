@@ -4,7 +4,7 @@ from typing import Callable
 from ..database.memory_db import ObjMemoryInterface
 from ..database.memory_db import make_obj
 
-from ..schemas import WebId, Obj
+from cahier import WebId, Obj
 
 ################################################################################
 

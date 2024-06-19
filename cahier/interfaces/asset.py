@@ -1,7 +1,7 @@
 """"""
 from typing import Protocol
 
-from ..schemas import ObjEnum, map_type_to_parent, SingleOutput, ListOutput, WebId, ObjInput, Obj
+from cahier import ObjEnum, SingleOutput, ListOutput, WebId, Obj
 
 ################################################################################
 

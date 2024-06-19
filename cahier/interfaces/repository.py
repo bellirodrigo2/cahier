@@ -2,7 +2,7 @@
 from typing import Protocol, Any, Callable
 from abc import abstractmethod
 
-from ..schemas import WebId, Obj, ObjEnum
+from cahier import WebId, Obj, ObjEnum
 
 ################################################################################
 

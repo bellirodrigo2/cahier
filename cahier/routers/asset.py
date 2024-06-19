@@ -1,12 +1,12 @@
 """ Routers for Cahier Builder """
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Response, Path, Body, Query, Request
+from fastapi import APIRouter, Depends, Path, Body, Query, Request
 
-from ..interfaces import AssetServiceInterface
-from ..schemas import WebId, ObjInput, SingleOutput, ListOutput, ObjEnum
+from cahier import AssetServiceInterface, EventInterface
+from cahier import WebId, ObjInput, SingleOutput, ListOutput, ObjEnum
 
-from  ..config.depinj import make_asset_service
+from  ..config.depinj import make_asset_service, fire_read_one
 
 ################################################################################
 
@@ -16,11 +16,14 @@ router = APIRouter(
 
 @router.get('/{target}/{webid}', response_model=SingleOutput)
 def read_one(
+    req: Request,
     service: AssetServiceInterface = Depends(make_asset_service),
+    event: EventInterface = Depends(fire_read_one),
     target: ObjEnum = Path(title='...'),
     webid: WebId = Path(title='...'),
     selectedFields: Annotated[str | None, Query()] = None,
 ):
+    event('http', [target, webid])
     return service.get_one_by_webid(target_type=target, webid=webid)
 
 def check_path(target: ObjEnum, children: ObjEnum):
@@ -29,7 +32,6 @@ def check_path(target: ObjEnum, children: ObjEnum):
 @router.get('/{target}/{parent_webid}/{children}', response_model=SingleOutput, 
             dependencies=[Depends(check_path)])
 def read_all(
-    req:Request,
     service: AssetServiceInterface = Depends(make_asset_service),
     target: ObjEnum = Path(title='...'),
     children: ObjEnum = Path(title='...'),
