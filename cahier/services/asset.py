@@ -6,15 +6,22 @@ from cahier import WebId, ObjEnum, Obj, SingleOutput, ListOutput
 
 from cahier import  make_single_output, make_list_output
 
-################################################################################
+from ..interfaces.events import EventHandlerInterface
 
+################################################################################
+class EventHandlerError(Exception):
+        pass
 class AssetService:
     """"""
+
+    event_handlers: dict[str, Callable[..., None]] = {}
     
     def __init__(self,
             get_repo: Callable[[], RepositoryInterface],
+            ev_handler: EventHandlerInterface, #TEM QUE SER CALLABLE ?? VAI SER INJETADO ?
         ) -> None:
         self.__get_repo = get_repo
+        self.ev_handler = ev_handler
     
     def _get_one(self, webid: WebId)->Obj:
         repo: RepositoryInterface = self.__get_repo()
@@ -24,12 +31,11 @@ class AssetService:
         repo: RepositoryInterface = self.__get_repo()
         return repo.get_all_by_parent_webid(webid=parent_webid, filter=None)
     
-    
     def get_one_by_webid(self, webid: WebId, 
                         target_type: ObjEnum | None = None)->SingleOutput:  
-        
+        self.ev_handler.fire_event(webid, target_type, name = 'pre_read_one',)
         obj: Obj = self._get_one(webid=webid)
-        
+        self.ev_handler.fire_event((obj,), name = 'pos_read_one',)
         if target_type is not None:
             # FAZER CAST PARA Obj especifico de pydantic
             check_obj_type(obj, target_type)
@@ -51,4 +57,3 @@ class AssetService:
     
     def add_one_and_check_parent(self, parent_type: ObjEnum, webid: WebId, obj:Obj)->None:
         pass
-    

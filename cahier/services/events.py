@@ -1,23 +1,21 @@
 """"""
 from typing import Callable
+from ..interfaces.events import EventHandlerInterface, EventHandlerError
 
-class EventHandlerError(Exception):
-    pass
-
-event_handlers = {}
-
-def add_event_handler(event_name: str, callback: Callable[..., None]):
+class EventHandler():
     """"""
-    event_handlers[event_name] = callback
-
-def make_event(error_handler: Callable[[Exception], None] | None):
-    """"""
-    def fire_event(name: str, *args, **kwargs):
-        if name in event_handlers:
-            try:
-                event_handlers[name]( *args, **kwargs)
-            except Exception as e:
-                if error_handler:
-                    error_handler(e)
-                raise EventHandlerError()
-    return fire_event
+    
+    event_handlers: dict[str, Callable[..., None]] = {}
+    
+    @classmethod
+    def add_event_handler(self, event_name: str, callback: Callable[..., None]):
+        pass
+    
+    def fire_event(self, name: str, *args, **kwargs):
+        def fire_event(name: str, *args, **kwargs):
+            if name in self.event_handlers:
+                try:
+                    self.event_handlers[name]( *args, **kwargs)
+                except Exception as e:
+                    raise EventHandlerError(e)
+        return fire_event

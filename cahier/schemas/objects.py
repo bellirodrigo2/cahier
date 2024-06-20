@@ -2,9 +2,9 @@
 from typing import Annotated
 from enum import Enum
 
-from .timestamp import Timestamp
-from .base_objects import _ServerObj, _BaseObj, _ElementObj, _ItemObj, _NodeObj, _RootObj
-from .base_objects import map_base_to_parent, Field
+from cahier.schemas.timestamp import Timestamp
+from cahier.schemas.base_objects import _ServerObj, _BaseObj, _ElementObj, _ItemObj, _NodeObj, _RootObj
+from cahier.schemas.base_objects import map_base_to_parent, Field
 
 ################################################################################
 
@@ -84,7 +84,7 @@ class Item(_ItemObj):
     @classmethod
     def obj_type(cls)->str:
         return 'item'
-    
+   
     path: pathField
     
     data_type: Annotated[DataTypeEnum, Field(
@@ -102,16 +102,14 @@ class Item(_ItemObj):
 deriveds = [[c for c in cls.__subclasses__()] for cls in _BaseObj.__subclasses__()]
 nested_classes = [item for sublist in deriveds for item in sublist]
 
-
 # create a enum type from the derived classes
 types_list = {x.obj_type(): x.obj_type() for x in nested_classes}
-
 class CompareObjEnum:
     
-    def is_valid_child(self, child):
-        possible_parent = map_type_to_parent[child.name]
-        if possible_parent and self.name in possible_parent:
-            return
+    def is_valid_child_of(self, child):
+        possible_parent = map_type_to_parent[self.name]
+        if possible_parent and child.name in possible_parent:
+            return True
         raise TypeHierarchyError(parent_type=self, children_type=child)
 
 ObjEnum = Enum(
@@ -126,6 +124,8 @@ ObjEnum = Enum(
 map_type_to_base = {c.obj_type():c.base_type().name for c in nested_classes}
 map_type_to_parent = {k:map_base_to_parent[v] for k,v in map_type_to_base.items()}
 
+
+
 class TypeHierarchyError(Exception):
     """ failure in the type hierarchy. parent and children types are incompatible """
     
@@ -133,3 +133,20 @@ class TypeHierarchyError(Exception):
         self.message = f'Type Hierarchy Error. \
             Object of type {parent_type=} can´t have a children of type {children_type=}'
         self.name = 'TypeHierarchyError'
+
+if __name__ == '__main__':
+    
+    
+    n = ObjEnum.node
+    i = ObjEnum.item
+    e = ObjEnum.counter
+    
+    assert i.is_valid_child_of(n)
+    assert n.is_valid_child_of(n)
+    
+    try:
+        n.is_valid_child_of(i)
+    except Exception as e:
+        print(e)
+        
+    print(nested_classes)    

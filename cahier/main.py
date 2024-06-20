@@ -1,7 +1,7 @@
 """"""
 
-from fastapi import FastAPI
-
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from .routers.asset import router as asset_router
 
 # from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
@@ -36,13 +36,10 @@ app.include_router(asset_router)
     # return JSONResponse(status_code=exc.status_code, content={"message": exc.detail})
 # app.add_exception_handler(MyHTTPException, my_http_exception_handler)
 
-def handler(req, exc):
+@app.exception_handler(HTTPException)
+async def handle_invalid_request(request, exc):
     print('********************', exc)
-
-app.add_exception_handler(
-    exc_class_or_status_code=Exception,
-    handler=handler
-    )
+    return JSONResponse(status_code=300, content=str(exc))
 
 # app.add_exception_handler(
     # exc_class_or_status_code=InconsistentAssetTypeError,
