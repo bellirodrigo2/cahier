@@ -7,32 +7,11 @@ import importlib
 from pydantic import Field
 
 from cahier.schemas.base_objects import _BaseObj, _NodeObj, _ItemObj, _ElementObj
+from cahier.schemas.loader import load_all_plugins
 
 ################################################################################
 
-def get_plugins(path: str)->list[str]:
-    """Get the python files from parent 'plugin' folder."""
-    
-    walk_list:list[str] = list(next(os.walk(f'{path}/plugins'), (None, None, []))[2])
-    return [f'plugins.{x}'.replace('.py','') 
-            for x in walk_list 
-                if x.endswith('.py') and x.startswith('__init__') == False]
-
-def import_module(name: str):
-    """Imports a module given a name."""
-
-    return importlib.import_module(f'cahier.schemas.{name}')
-
-def load_all_plugins(plugins: list[str]) -> None:
-    """Loads the plugins defined in the plugins list."""
-    
-    for plugin_file in plugins:
-        plugin = import_module(plugin_file)
-
-# Load Plugins Here
-plugins = get_plugins(os.path.dirname(__file__))
-load_all_plugins(plugins)
-
+load_all_plugins()
 
 deriveds = [[c for c in cls.__subclasses__()] for cls in _BaseObj.__subclasses__()]
 nested_classes = [item for sublist in deriveds for item in sublist]
