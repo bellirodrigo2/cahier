@@ -37,21 +37,21 @@ class EventHandler():
 if __name__ == '__main__':
     print('Event')
     
-class BaseA(EventHandler):
-    pass
+# class BaseA(EventHandler):
+#     pass
 
-class BaseB(EventHandler):
-    pass
+# class BaseB(EventHandler):
+#     pass
 
-a = BaseA()
-b = BaseB()
+# a = BaseA()
+# b = BaseB()
 
-def enter_x(x: str):
-    print(f'Entering {x=}')
-def leave_x(x: str):
-    print(f'Leaving {x=}')
-a.add_event_handler('enter', enter_x)
-BaseA().add_event_handler('leave', leave_x)
+# def enter_x(x: str):
+#     print(f'Entering {x=}')
+# def leave_x(x: str):
+#     print(f'Leaving {x=}')
+# a.add_event_handler('enter', enter_x)
+# BaseA().add_event_handler('leave', leave_x)
 
-a.fire_event('enter', 'event1')
-a.fire_event('leave', 'event1')
+# a.fire_event('enter', 'event1')
+# a.fire_event('leave', 'event1')

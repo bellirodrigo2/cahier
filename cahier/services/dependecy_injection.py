@@ -10,6 +10,7 @@ from cahier.schemas.objects import ObjEnum
 # from ..repositories import SQLAlchemyRepository
 
 from cahier.services.asset import AssetService
+from cahier.services.events import EventHandler
 
 # from .events import add_event_handler, make_event
 
@@ -34,7 +35,7 @@ make_repo = partial(InMemoryRepository, get_memory_db)
 # Make Asset Service
 ################################################################################
 
-get_asset_service = partial(AssetService, get_repo = make_repo)
+get_asset_service = partial(AssetService, get_repo = make_repo, ev_handler = EventHandler)
 
 ################################################################################
 # Register Events
@@ -45,6 +46,5 @@ def pre_read_one(args: Tuple[WebId, ObjEnum | None]):
 
 def post_read_one(arg: Tuple[Obj]):
     print('Firing Post Read', arg[0])
-# add_event_handler(event_name='post_read_one', callback=post_read_one)
-
-# get_fire_event = partial(make_event, error_handler=lambda x: print(x))
+    
+get_asset_service().add_event_handler('pre_read_one', pre_read_one)

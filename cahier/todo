@@ -1,3 +1,17 @@
+############################################################################################
+$$$$ NEXT STEP: onjinput, obj, objupdate, objputput
+    https://sqlmodel.tiangolo.com/tutorial/fastapi/multiple-models/
+    https://stackoverflow.com/questions/65883869/can-i-override-fields-from-a-pydantic-parent-model-to-make-them-optional
+
+TESTAR O ASSET SERVICE COM IN MEMORY...tree_lib
+    https://martinfowler.com/bliki/InMemoryTestDatabase.html
+
+ADICIONAR EVENHANDLER EM TODOS OS SERVIÇOS DE MANEIRA MAIS SIMPLES ?????? decorator ????
+MELHORAR EXCEPTIONS
+    https://medium.com/@saadjamilakhtar/5-best-practices-for-python-exception-handling-5e54b876a20
+
+############################################################################################
+
 https://python-dependency-injector.ets-labs.org/examples/fastapi-sqlalchemy.html
 
 *FAZER TESTES DE CIMA PRA BAIXO COM INMEMORY
@@ -9,6 +23,8 @@ https://python-dependency-injector.ets-labs.org/examples/fastapi-sqlalchemy.html
         https://pytest-with-eric.com/mocking/python-magicmock-raise-exception/
         https://pytest-with-eric.com/mocking/pytest-monkeypatch/
         https://docs.python.org/3/library/unittest.mock.html
+
+como fazer para tirar pydantic das dependencias ???? injetar ??? injetar na _BaseObj ????s
 
 *** colocar o depinj.py dentro da pasta do service
 DE PRA FAZER n x Items
