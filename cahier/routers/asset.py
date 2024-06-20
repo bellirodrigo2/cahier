@@ -3,10 +3,11 @@ from typing import Annotated, Tuple
 
 from fastapi import APIRouter, Depends, Path, Body, Query
 
-from cahier import AssetServiceInterface
-from cahier import WebId, Obj, SingleOutput, ListOutput, ObjEnum
+from cahier.interfaces.asset import AssetServiceInterface
+from cahier.schemas.objects import ObjEnum
+from cahier.schemas.schemas import WebId, Obj, SingleOutput, ListOutput
 
-from cahier import get_fire_event, get_asset_service
+from cahier.services.dependecy_injection import get_asset_service
 
 ################################################################################
 
@@ -17,14 +18,14 @@ router = APIRouter(
 @router.get('/{target}/{webid}', response_model=SingleOutput)
 def read_one(
     service: AssetServiceInterface = Depends(get_asset_service),
-    fire_event = Depends(get_fire_event),
+    # fire_event = Depends(get_fire_event),
     target: ObjEnum = Path(title='...'),
     webid: WebId = Path(title='...'),
     selectedFields: Annotated[str | None, Query()] = None,
 ):
-    fire_event('pre_read_one', (target, webid))
+    # fire_event('pre_read_one', (target, webid))
     obj: Obj = service.get_one_by_webid(target_type=target, webid=webid)
-    fire_event('post_read_one', (obj,))
+    # fire_event('post_read_one', (obj,))
     return obj
 
 def check_path(target: ObjEnum, children: ObjEnum):
@@ -34,7 +35,7 @@ def check_path(target: ObjEnum, children: ObjEnum):
             dependencies=[Depends(check_path)])
 def read_all(
     service: AssetServiceInterface = Depends(get_asset_service),
-    fire_event = Depends(get_fire_event),
+    # fire_event = Depends(get_fire_event),
     target: ObjEnum = Path(title='...'),
     children: ObjEnum = Path(title='...'),
     parent_webid: WebId = Path(title='...'),
@@ -49,11 +50,11 @@ def read_all(
     selectedFields: str | None = Query()
     
 ):    
-    fire_event('pre_read_all', (target, parent_webid, children))
+    # fire_event('pre_read_all', (target, parent_webid, children))
     objs: ListOutput = service.get_all_by_parentwebid_and_type(
         parent_type=target, children_type=children, parent_webid=parent_webid
         )
-    fire_event('post_read_all', (objs))
+    # fire_event('post_read_all', (objs))
     return objs
 
 @router.post('/{target}/{parent_webid}/{children}',

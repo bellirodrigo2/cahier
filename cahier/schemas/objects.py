@@ -1,152 +1,66 @@
-""" Base Objects and hierarchies """
+""" Map Objects and hierarchies """
 from typing import Annotated
 from enum import Enum
+import os
+import importlib
 
-from cahier.schemas.timestamp import Timestamp
-from cahier.schemas.base_objects import _ServerObj, _BaseObj, _ElementObj, _ItemObj, _NodeObj, _RootObj
-from cahier.schemas.base_objects import map_base_to_parent, Field
+from pydantic import Field
+
+from cahier.schemas.base_objects import _BaseObj, _NodeObj, _ItemObj, _ElementObj
 
 ################################################################################
 
-
-class DataServer(_ServerObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'dataserver'
+def get_plugins(path: str)->list[str]:
+    """Get the python files from parent 'plugin' folder."""
     
-class AssetServer(_ServerObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'assetserver'
+    walk_list:list[str] = list(next(os.walk(f'{path}/plugins'), (None, None, []))[2])
+    return [f'plugins.{x}'.replace('.py','') 
+            for x in walk_list 
+                if x.endswith('.py') and x.startswith('__init__') == False]
 
+def import_module(name: str):
+    """Imports a module given a name."""
 
-class DataBase(_RootObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'database'
-class User(_RootObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'user'
+    return importlib.import_module(f'cahier.schemas.{name}')
 
-
-class View(_ElementObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'view'
-class Proc(_ElementObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'proc'
-class Collections(_ElementObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'collections'
-class EnumSet(_ElementObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'enumset'
-class KeyValue(_ElementObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'keyvalue'
-class Counter(_ElementObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'counter'
-
-pathField = Annotated[str, Field(
-        alias='Path',
-        serialization_alias='Path',
-    )]
-
-class Node(_NodeObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'node'
+def load_all_plugins(plugins: list[str]) -> None:
+    """Loads the plugins defined in the plugins list."""
     
-    path: pathField
-    
-    template: Annotated[str, Field(
-        alias='Template',
-        serialization_alias='Template',
-        default=''
-    )]
-class DataTypeEnum(Enum):
-    string = str
-    float = float
-    int = int
-    boolean = bool
-    byte = bytes
-    timestamp = Timestamp
+    for plugin_file in plugins:
+        plugin = import_module(plugin_file)
 
-class Item(_ItemObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'item'
-   
-    path: pathField
-    
-    data_type: Annotated[DataTypeEnum, Field(
-        alias='DataType',
-        serialization_alias='DataType'
-    )]
-    
-    data_source: Annotated[str, Field(
-        alias='DataSource',
-        serialization_alias='DataSource',
-    )]
-################################################################################
+# Load Plugins Here
+plugins = get_plugins(os.path.dirname(__file__))
+load_all_plugins(plugins)
 
-# get all classes derived from _BaseObj
+
 deriveds = [[c for c in cls.__subclasses__()] for cls in _BaseObj.__subclasses__()]
 nested_classes = [item for sublist in deriveds for item in sublist]
 
-# create a enum type from the derived classes
-types_list = {x.obj_type(): x.obj_type() for x in nested_classes}
-class CompareObjEnum:
-    
-    def is_valid_child_of(self, child):
-        possible_parent = map_type_to_parent[self.name]
-        if possible_parent and child.name in possible_parent:
-            return True
-        raise TypeHierarchyError(parent_type=self, children_type=child)
+parent_map = {x.base_type(): x.parent() for x in nested_classes}
+types_map = {x.obj_type(): x.obj_type() for x in nested_classes}
+base_map = {x.obj_type(): x.base_type() for x in nested_classes}
+init_map = {x.obj_type(): x for x in nested_classes}
 
 ObjEnum = Enum(
     'ObjEnum',
-    types_list,
+    types_map,
     module='objects',
     qualname='objects.ObjEnum',
-    type=CompareObjEnum
     )
 
-#create map from obj type to base class and then to possible parent types
-map_type_to_base = {c.obj_type():c.base_type().name for c in nested_classes}
-map_type_to_parent = {k:map_base_to_parent[v] for k,v in map_type_to_base.items()}
+def obj_factory(obj_type: ObjEnum, **kwargs):
+    return init_map[obj_type.name](**kwargs)
 
-
-
-class TypeHierarchyError(Exception):
-    """ failure in the type hierarchy. parent and children types are incompatible """
-    
-    def __init__(self, parent_type: ObjEnum, children_type: ObjEnum):
-        self.message = f'Type Hierarchy Error. \
-            Object of type {parent_type=} can´t have a children of type {children_type=}'
-        self.name = 'TypeHierarchyError'
+def is_valid_parent(parent: ObjEnum, child: ObjEnum):
+    base_child = base_map[child.name]
+    base_parent = base_map[parent.name]
+    possible_parents = parent_map[base_child]
+    return base_parent in possible_parents
 
 if __name__ == '__main__':
     
-    
-    n = ObjEnum.node
-    i = ObjEnum.item
-    e = ObjEnum.counter
-    
-    assert i.is_valid_child_of(n)
-    assert n.is_valid_child_of(n)
-    
-    try:
-        n.is_valid_child_of(i)
-    except Exception as e:
-        print(e)
-        
-    print(nested_classes)    
+    print('classes ', nested_classes)
+    print('parents ', parent_map)
+    print('init´s ', init_map)
+    print('bases ', base_map)

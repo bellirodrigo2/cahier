@@ -1,7 +1,7 @@
 """ In Memory Database """
 from typing import Protocol
 
-from cahier import WebId, Obj
+from cahier.schemas.schemas import WebId, Obj
 
 ################################################################################
 
@@ -41,7 +41,7 @@ def make_obj(obj: Obj, parent: WebId)->ObjMemoryInterface:
     return ObjMemory(obj, parent)
 
 
-def get_db():
+def get_memory_db():
     """ """
     try:
         yield db

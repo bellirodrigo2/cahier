@@ -1,7 +1,8 @@
 """"""
 from typing import Protocol, Tuple
 
-from cahier import ObjEnum, SingleOutput, ListOutput, WebId, Obj
+from cahier.schemas.objects import ObjEnum
+from cahier.schemas.schemas import SingleOutput, ListOutput, WebId, Obj
 
 ################################################################################
 

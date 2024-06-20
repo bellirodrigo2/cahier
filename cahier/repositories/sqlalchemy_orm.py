@@ -3,8 +3,8 @@ from typing import Callable
 
 from sqlalchemy.orm import DeclarativeBase
 
-from ..database.sqlalchemy_db import DbType
-from ..schemas import WebId, Obj
+from cahier.database.sqlalchemy_db import DbType
+from cahier.schemas.schemas import WebId, Obj
 
 
 ################################################################################

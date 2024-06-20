@@ -1,10 +1,10 @@
 """ In Memory Repository """
 from typing import Callable
 
-from ..database.memory_db import ObjMemoryInterface
-from ..database.memory_db import make_obj
+from cahier.database.memory_db import ObjMemoryInterface
+from cahier.database.memory_db import make_obj
 
-from cahier import WebId, Obj
+from cahier.schemas.schemas import WebId, Obj
 
 ################################################################################
 

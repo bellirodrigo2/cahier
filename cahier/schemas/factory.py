@@ -1,16 +1,17 @@
 """"""
 from typing import Type
 
-from . import ObjEnum, Obj, SingleOutput, ListOutput
-from . import Node, Item
+from cahier.schemas.objects import ObjEnum
+from cahier.schemas.schemas import Obj, SingleOutput, ListOutput
+# from cahier.schemas import Node, Item
 
 ################################################################################
 
 #fazer o poprion ObjEnum como Factory
 
 obj_map: dict[ObjEnum, Type[Obj]] = {
-    ObjEnum.node: Node,
-    ObjEnum.item: Item
+    # ObjEnum.node: Node,
+    # ObjEnum.item: Item
 }
 
 def cast_obj(tgt_type: ObjEnum, obj: Obj)->Obj:

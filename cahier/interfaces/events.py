@@ -1,16 +1,15 @@
 """"""
-from typing import Callable
-from abc import ABC, abstractmethod
+from typing import Protocol, Callable
 ################################################################################
 
-class EventHandlerInterface(ABC):
+class EventHandlerInterface(Protocol):
     """"""
-    @classmethod
-    @abstractmethod
-    def add_event_handler(self, event_name: str, callback: Callable[..., None]):
+    def add_event_handler(self, event_name: str, callback: Callable[..., None])->None:
         pass
     
-    abstractmethod
+    def remove_event_handler(self, event_name: str,)->None:
+        pass
+    
     def fire_event(self, name: str, *args, **kwargs):
         pass
     

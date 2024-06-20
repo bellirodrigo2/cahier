@@ -1,16 +1,18 @@
 """"""
 from typing import Tuple, Callable
 
-from cahier import AssetServiceInterface, RepositoryInterface
-from cahier import WebId, ObjEnum, Obj, SingleOutput, ListOutput
+from cahier.interfaces.asset import AssetServiceInterface
+from cahier.interfaces.repository import RepositoryInterface
 
-from cahier import  make_single_output, make_list_output
+from cahier.schemas.objects import ObjEnum
+from cahier.schemas.schemas import WebId, Obj, SingleOutput, ListOutput
+
+from cahier.schemas.factory import  make_single_output, make_list_output
 
 from ..interfaces.events import EventHandlerInterface
 
 ################################################################################
-class EventHandlerError(Exception):
-        pass
+
 class AssetService:
     """"""
 
@@ -18,10 +20,18 @@ class AssetService:
     
     def __init__(self,
             get_repo: Callable[[], RepositoryInterface],
-            ev_handler: EventHandlerInterface, #TEM QUE SER CALLABLE ?? VAI SER INJETADO ?
+            ev_handler: Callable[[], EventHandlerInterface] | None,
         ) -> None:
         self.__get_repo = get_repo
         self.ev_handler = ev_handler
+    
+    def add_event_handler(self, event_name: str, callback: Callable[..., None])->None:
+        if self.ev_handler:
+            self.ev_handler().add_event_handler(event_name=event_name, callback=callback)
+    
+    def remove_event_handler(self, event_name: str,)->None:
+        if self.ev_handler:
+            self.ev_handler().remove_event_handler(event_name=event_name)
     
     def _get_one(self, webid: WebId)->Obj:
         repo: RepositoryInterface = self.__get_repo()
@@ -33,9 +43,15 @@ class AssetService:
     
     def get_one_by_webid(self, webid: WebId, 
                         target_type: ObjEnum | None = None)->SingleOutput:  
-        self.ev_handler.fire_event(webid, target_type, name = 'pre_read_one',)
+        if self.ev_handler:
+            self.ev_handler().fire_event(
+                name = 'pre_read_one', webid=webid, target_type=target_type,
+                )
+       
         obj: Obj = self._get_one(webid=webid)
-        self.ev_handler.fire_event((obj,), name = 'pos_read_one',)
+        if self.ev_handler:
+            self.ev_handler().fire_event(name = 'pos_read_one', obj=(obj,),)
+        
         if target_type is not None:
             # FAZER CAST PARA Obj especifico de pydantic
             check_obj_type(obj, target_type)

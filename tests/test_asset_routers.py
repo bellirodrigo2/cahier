@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 from cahier.main import app
 from cahier.routers.asset import get_asset_service
 
-from cahier import ObjEnum
+from cahier.schemas.objects import ObjEnum
 
 from starlette.middleware.base import BaseHTTPMiddleware
 
