@@ -42,18 +42,22 @@ if __name__ == '__main__':
     print('init´s ', init_map)
     print('bases ', base_map)
 
-from pydantic import BaseModel, Field
+# from typing import Optional
+# from pydantic import BaseModel, Field
+# from functools import partial
 
-NameField = Annotated[str , Field(
-        default='NAMEEEE',
-    )]
+# FieldDefault = partial(Field, default='NAMEEE')
 
-class model1(BaseModel):
-    name: NameField
+# namefield = Annotated[str, Field(default='hellow')]
+
+# class model1(BaseModel):
+#     name: namefield
+#     age: int
     
-class model2(BaseModel):
-    name: NameField | None
+# class model2(BaseModel):
+#     name: namefield | None = None
+#     age: int
     
-    
-print(model1())
-# print(model2())
+#     # https://stackoverflow.com/questions/67699451/make-every-field-as-optional-with-pydantic
+# print(model1(age=23))
+# print(model2(age=12).model_dump())

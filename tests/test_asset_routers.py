@@ -96,6 +96,19 @@ def test_getall_ok(id, mock_asset_service):
         parent=parent_path, children = child_parent, webid=UUID(id), query_dict={}
         )
     mock_asset_service.get_one_by_webid.assert_not_called()
+
+@pytest.mark.parametrize('id', ['NOUUID'])
+def test_getall_wrongWEBID(id, mock_asset_service):
+    
+    parent_path = ObjEnum.node
+    child_parent = ObjEnum.item
+    
+    response = client.get(f'/{parent_path.name}/{id}/{child_parent.name}')
+    
+    assert response.status_code == 422
+    mock_asset_service.get_all_by_webid.assert_not_called()
+    mock_asset_service.get_one_by_webid.assert_not_called()
+
     
 @pytest.mark.parametrize('id', ['1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'])
 def test_getall_ok_w_params(id, mock_asset_service):
@@ -117,4 +130,23 @@ def test_getall_ok_w_params(id, mock_asset_service):
         webid=UUID(id), query_dict=expected_query_dict
         )
     mock_asset_service.get_one_by_webid.assert_not_called()
+ 
+@pytest.mark.parametrize('id, body', 
+                         [('1c8accd9-2e70-11ef-a48f-3024a9fbd4aa', oe) 
+                            for oe in [
+                                {}, {'Name' : 'foo','ClientId': 'bar'}
+                            ]
+                        ])
+def test_addone_ok(id, body, mock_asset_service):   
+    
+    parent_path = ObjEnum.node
+    child_parent = ObjEnum.item
+    
+    response = client.post(f'/{parent_path.name}/{id}/{child_parent.name}', 
+                           json=body)
+    assert response.status_code == 200
+    
+    mock_asset_service.get_one_by_webid.assert_not_called()
+    mock_asset_service.get_all_by_webid.assert_not_called()
+    mock_asset_service.add_one.assert_called_once()
     

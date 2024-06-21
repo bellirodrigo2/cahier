@@ -94,7 +94,7 @@ class ObjBaseModel(BaseModel):
         frozen=True,
         )
 
-class ObjBase(ObjBaseModel):
+class ObjInput(ObjBaseModel):
     
     name: NameField
     description: DescriptionField
@@ -108,28 +108,18 @@ class ObjBase(ObjBaseModel):
         return check_invalid_char(name)
 
 
-class ObjInput(ObjBase):
-    pass
+class ObjUpdate(ObjBaseModel):
+    name: NameField | None = None
+    description: DescriptionField | None = None
+    client_id: ClientIdField | None = None
+    attributes: AttributeField | None = None
+    metadata: MetadataField | None = None
 
-class ObjUpdate(ObjBase):
+class Obj(ObjInput, hasWebId):
     pass
-
-class Obj(ObjBase, hasWebId):
-    pass
-
     
-class ObjOutput(ObjBaseModel):
-    
-    name: NameField | None
-    description: DescriptionField | None
-    client_id: ClientIdField | None
-    attributes: AttributeField | None
-    metadata: MetadataField | None
-
-    @field_validator("name")
-    @classmethod
-    def check_special_char(_, name: str) -> str:
-        return check_invalid_char(name)
+class ObjOutput(ObjUpdate):    
+    pass
 
 
 class hasLinks:

@@ -41,8 +41,16 @@ def read_all(
     selectedFields: Annotated[str | None, Query(...)] = None,
 ):    
     queries = dict(request.query_params)
+    if 'fieldFilterLike' in queries:
+        queries['fieldFilterLike'] = fieldFilterLike
+
     if 'fieldFilter' in queries:
         queries['fieldFilter'] = fieldFilter
+
+    # set HEADERS for pagination
+        #total objects ????  teria que saber i numero total de items
+        #from
+        #to
 
     return service.get_all_by_webid(
         parent=target, children=children, webid=webid, query_dict = queries
@@ -56,6 +64,6 @@ def create_one(
     children: ObjEnum = Path(title='...'),
     obj: ObjInput = Body(title='Node JSON object to be added to the provided webids'),
 ):
-    service.add_one_and_check_parent(parent=target, webid=webid, children = children, obj=obj)
+    service.add_one(parent=target, webid=webid, children = children, obj=obj)
     #set header
     #set status_code

@@ -1,7 +1,5 @@
 ############################################################################################
 $$$$ NEXT STEP: onjinput, obj, objupdate, objputput
-    https://sqlmodel.tiangolo.com/tutorial/fastapi/multiple-models/
-    https://stackoverflow.com/questions/65883869/can-i-override-fields-from-a-pydantic-parent-model-to-make-them-optional
 
 TESTAR O ASSET SERVICE COM IN MEMORY...tree_lib
     https://martinfowler.com/bliki/InMemoryTestDatabase.html
@@ -15,67 +13,28 @@ MELHORAR EXCEPTIONS
 https://python-dependency-injector.ets-labs.org/examples/fastapi-sqlalchemy.html
 
 *FAZER TESTES DE CIMA PRA BAIXO COM INMEMORY
-    capturar os erros 422 validação...se for erro no path, com obj_type desconhecido...tem que gerar erro de url e não de validação
+    #TESTAR path_parent que nao funcione
+    capturar os erros 422 validação...se for erro no path, com obj_type desconhecido...
+    tem que gerar erro de url e não de validação
     fazer todos os exceptons to nivel do router
-    fazer mapa para links dependendo do tipo do objeto
-    mocks   
-        https://pytest-with-eric.com/mocking/pytest-mocking/#Mock-A-Class
-        https://pytest-with-eric.com/mocking/python-magicmock-raise-exception/
-        https://pytest-with-eric.com/mocking/pytest-monkeypatch/
-        https://docs.python.org/3/library/unittest.mock.html
 
 como fazer para tirar pydantic das dependencias ???? injetar ??? injetar na _BaseObj ????s
 
 *** colocar o depinj.py dentro da pasta do service
-DE PRA FAZER n x Items
-
-mudar o service....tirar o pre_proc e post_proc e colocar eventos pre e pos
 
 https://engineering.atspotify.com/2018/01/testing-of-microservices/
 
 https://www.youtube.com/watch?v=6FwD0iAe3tI
-
-*ler https://stackoverflow.com/questions/17801344/understanding-metaclass-and-inheritance-in-python
-
-DEFINIR------ colocar o gerador de eventos, dentro do asset service.... pre_get_one, post_get_one
-class ReadOneEvent(Event):
-fazer uma exception... onread event
-evento tras o momento que eh chamado pra nao dar problema de async
     
 fazer os testes e olhar coverage,,,,ir criando testes para aumentar o coverage
 
-    def __init__(self, data: Tuple[ObjEnum, WebId]):
-        Event('read_one', data)
-No Asset Service
-
 SonarQube — Static Code Analysis
-
-FAZER A FUNÇÃO ABAIXO COM pydantic
-def check_obj_type(obj: Obj, expected_type: ObjEnum):
-    if obj.obj_type != expected_type:
-        raise InconsistentTypeError(expected=expected_type, actual=obj.obj_type)
-
-fazer factory: objEnum: Classe Especifica
-
-Obj type tem que ser frozen
-
-
-######################################################################
-##### assistir aula de ontem em 01:06.... sobre o projeto da central telefonica e inversao de dependencia
-########################################################################
 
 
 fazer handlers de erro em nivel de aplicação, serviço, etc
 assistir video do arjancodes sobre exception de fastapi
 Override the default exception handlers
 https://fastapi.tiangolo.com/tutorial/handling-errors/
-
-usar tree_lib como repo de teste
-
-
-amanha colocar umas metas....terminar o asset service até nivel do repo...completo em sqlalchemy.....stream service, etc
-
-implementar attributes
 
 #PENSAR EM COMO BOOTSTRAP SQLITE
 

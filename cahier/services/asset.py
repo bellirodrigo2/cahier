@@ -90,9 +90,9 @@ class AssetService:
         
         return make_list_output(objs)
     
-    def add_one_and_check_parent(self, 
-                                 parent: ObjEnum, children: ObjEnum, webid: WebId, obj:ObjInput
-                                )->None:
+    def add_one(self, 
+                    parent: ObjEnum, children: ObjEnum, webid: WebId, obj:ObjInput
+                )->None:
         
         check_hierarchy(parent, children)
         
