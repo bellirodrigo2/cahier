@@ -82,18 +82,33 @@ def test_getone_wrong_webid(id, path, mock_asset_service):
     mock_asset_service.get_one_by_webid.assert_not_called()
     mock_asset_service.get_all_by_webid.assert_not_called()
 
-@pytest.mark.parametrize('id', ['1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'])
-def test_getall_ok(id, mock_asset_service):
+
+@pytest.mark.parametrize('parent, child', [('noexist', 'item'), ('node', 'noexist')])
+def test_getall_wrong_path(parent, child, mock_asset_service):
+    id = '1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'
+    response = client.get(f'/{parent}/{id}/{child}')
+    assert response.status_code == 422
+    mock_asset_service.get_one_by_webid.assert_not_called()
+    mock_asset_service.get_all_by_webid.assert_not_called()
+
+
+@pytest.mark.parametrize('parent, child', [
+    (ObjEnum.assetserver, ObjEnum.database),
+    (ObjEnum.database, ObjEnum.node), (ObjEnum.database, ObjEnum.view),
+    (ObjEnum.node, ObjEnum.item), (ObjEnum.item,ObjEnum.item), 
+    ])
+def test_getall_ok(parent, child, mock_asset_service):
     
-    parent_path = ObjEnum.node
-    child_parent = ObjEnum.item
-    
+    id = '1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'
+
     queries = ''
-    response = client.get(f'/{parent_path.name}/{id}/{child_parent.name}?{queries}')
+    response = client.get(
+        f'/{parent.name}/{id}/{child.name}?{queries}'
+        )
     
     assert response.status_code == 200
     mock_asset_service.get_all_by_webid.assert_called_with(
-        parent=parent_path, children = child_parent, webid=UUID(id), query_dict={}
+        parent=parent, children = child, webid=UUID(id), query_dict={}
         )
     mock_asset_service.get_one_by_webid.assert_not_called()
 
@@ -111,7 +126,7 @@ def test_getall_wrongWEBID(id, mock_asset_service):
 
     
 @pytest.mark.parametrize('id', ['1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'])
-def test_getall_ok_w_params(id, mock_asset_service):
+def test_getall_ok_w_query_params(id, mock_asset_service):
     
     parent_path = ObjEnum.node
     child_parent = ObjEnum.item
@@ -149,4 +164,17 @@ def test_addone_ok(id, body, mock_asset_service):
     mock_asset_service.get_one_by_webid.assert_not_called()
     mock_asset_service.get_all_by_webid.assert_not_called()
     mock_asset_service.add_one.assert_called_once()
+
+@pytest.mark.parametrize('id', ['NOUUID'])
+def test_addone_wrongWEBID(id, mock_asset_service):
     
+    parent_path = ObjEnum.node
+    child_parent = ObjEnum.item
+    
+    response = client.post(f'/{parent_path.name}/{id}/{child_parent.name}',
+                           json={})
+    
+    assert response.status_code == 422
+    mock_asset_service.get_all_by_webid.assert_not_called()
+    mock_asset_service.get_one_by_webid.assert_not_called()
+    mock_asset_service.add_one.assert_not_called()
