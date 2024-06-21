@@ -8,7 +8,6 @@ from pydantic import Field
 
 WebId = UUID
 
-
 def make_webid()->WebId:
     return uuid1()
 

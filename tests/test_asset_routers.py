@@ -31,6 +31,10 @@ mock_session.get_one_by_webid.return_value = {
     'Id': 'foobar',
     'Attributes': {}
 }
+mock_session.get_all_by_parentwebid.return_value = {
+    'Id': 'foobar',
+    'Attributes': {}
+}
 # mock_session.FUNCNAMEHERE.side_effect = []
 
 def mock_get_user_name():
@@ -53,29 +57,64 @@ def mock_asset_service():
 def setup_function():
     mock_session.reset_mock()
 
-def test_getone_ok(mock_asset_service):
+def test_getone_wrong_path(mock_asset_service):
     id = '1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'
-    path = ObjEnum.node
+    path = 'noexistentpath'
+    response = client.get(f'/{path}/{id}')
+    assert response.status_code == 422
+    mock_asset_service.get_one_by_webid.assert_not_called()
+    mock_asset_service.get_all_by_webid.assert_not_called()
+
+@pytest.mark.parametrize('id, path',[('1c8accd9-2e70-11ef-a48f-3024a9fbd4aa', oe) 
+                                for oe in ObjEnum])
+def test_getone_ok(id, path, mock_asset_service):
+    
     response = client.get(f'/{path.name}/{id}')
     assert response.status_code == 200
     mock_asset_service.get_one_by_webid.assert_called_with(target_type=path, webid=UUID(id))
+    mock_asset_service.get_all_by_webid.assert_not_called()
+    
+@pytest.mark.parametrize('id, path', [('NOUUID', oe) for oe in ObjEnum])
+def test_getone_wrong_webid(id, path, mock_asset_service):
+    
+    response = client.get(f'/{path.name}/{id}')
+    assert response.status_code == 422
+    mock_asset_service.get_one_by_webid.assert_not_called()
+    mock_asset_service.get_all_by_webid.assert_not_called()
 
-def test_getone_wrong_path(mock_asset_service):
-    id = '1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'
-    path = lambda: None
-    path.name = 'noexistentpath'
-    response = client.get(f'/{path.name}/{id}')
-    assert response.status_code == 422
+@pytest.mark.parametrize('id', ['1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'])
+def test_getall_ok(id, mock_asset_service):
+    
+    parent_path = ObjEnum.node
+    child_parent = ObjEnum.item
+    
+    queries = ''
+    response = client.get(f'/{parent_path.name}/{id}/{child_parent.name}?{queries}')
+    
+    assert response.status_code == 200
+    mock_asset_service.get_all_by_webid.assert_called_with(
+        parent=parent_path, children = child_parent, webid=UUID(id), query_dict={}
+        )
     mock_asset_service.get_one_by_webid.assert_not_called()
     
-def test_getone_wrong_webid(mock_asset_service):
-    id = 'foo'
-    path = ObjEnum.node
-    response = client.get(f'/{path.name}/{id}')
-    assert response.status_code == 422
+@pytest.mark.parametrize('id', ['1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'])
+def test_getall_ok_w_params(id, mock_asset_service):
+    
+    parent_path = ObjEnum.node
+    child_parent = ObjEnum.item
+    
+    queries = f'fieldFilter=F1111&fieldFilter=F2222&selectedFields=selll'
+    
+    response = client.get(f'/{parent_path.name}/{id}/{child_parent.name}?{queries}')
+    
+    assert response.status_code == 200
+    expected_query_dict = {
+        'fieldFilter' : ['F1111', 'F2222'],
+        'selectedFields' : 'selll'
+    }
+    mock_asset_service.get_all_by_webid.assert_called_with(
+        parent=parent_path, children = child_parent, 
+        webid=UUID(id), query_dict=expected_query_dict
+        )
     mock_asset_service.get_one_by_webid.assert_not_called()
     
-    # test all possible paths to read_one
-    # test all possible paths to read_all
-    
-    #test raise exception on event_handler (mock it out!)

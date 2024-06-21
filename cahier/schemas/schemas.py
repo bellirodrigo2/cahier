@@ -42,80 +42,94 @@ def check_invalid_char(name)->str:
     
 strip_str = BeforeValidator(lambda x: str.strip(str(x)))
 
-# def make_id():
-    # return 
+def make_clientid():
+    return make_webid()
 
 ################################################################################
 
-class ObjLabel(BaseModel):
-    
-    name: Annotated[str, strip_str , Field(
+NameField = Annotated[str, strip_str , Field(
         description='Name Field Description',
-        default_factory=lambda: next(name_gen),
         min_length=NAME_MIN_LENGTH,
         max_length=NAME_MAX_LENGTH,
         alias='Name',
-        validation_alias='Name'
+        validation_alias='Name',
+        default_factory=lambda: next(name_gen),
     )]
-    
-    description: Annotated[str, strip_str, Field(
+
+DescriptionField = Annotated[str, strip_str, Field(
         description='Description Field Description',
-        default=DEFAULT_DESCRIPTION,
         min_length=DESCRIPTION_MIN_LENGTH,
         max_length=DESCRIPTION_MAX_LENGTH,
         alias='Description',
-        validation_alias='Description'
+        validation_alias='Description',
+        default=DEFAULT_DESCRIPTION,
     )]
-    
-    client_id: Annotated[str, strip_str, Field(
+
+ClientIdField = Annotated[str, strip_str, Field(
         description='ClientId Field Description',
-        # default=make_id,
         min_length=CLIENTID_MIN_LENGTH,
         max_length=CLIENTID_MAX_LENGTH,
         alias='Id',
-        validation_alias='Id'
+        validation_alias='Id',
+        default=make_clientid,
     )]
-    
-    attributes: Annotated[dict[str, Any], Field(
+
+AttributeField = Annotated[dict[str, Any], Field(
         description='',
         alias='Attributes',
         serialization_alias='Attributes',
+        default={}
     )]
 
-    metadata: Annotated[dict[str, Any], Field(
+MetadataField = Annotated[dict[str, Any], Field(
         alias='Metadata',
         serialization_alias='Metadata',
         default={}
         )]
+
+class ObjBaseModel(BaseModel):
+    model_config = ConfigDict(
+        populate_by_name=True,
+        use_enum_values=True,
+        frozen=True,
+        )
+
+class ObjBase(ObjBaseModel):
     
-    keywords: Annotated[List[str], Field(
-        alias='Keywords',
-        serialization_alias='Keywords',
-        default=[]
-    )]
+    name: NameField
+    description: DescriptionField
+    client_id: ClientIdField
+    attributes: AttributeField
+    metadata: MetadataField
         
     @field_validator("name")
     @classmethod
     def check_special_char(_, name: str) -> str:
         return check_invalid_char(name)
 
-# se for obj, usar defaukt_factory, se for update nao
-class ObjInput(ObjLabel):
+
+class ObjInput(ObjBase):
     pass
 
-class Obj(ObjLabel, hasWebId):
-    model_config = ConfigDict(
-        populate_by_name=True,
-        use_enum_values=True,
-        frozen=True, #Obj must be frozen to prevent changes post_proc at templated_service
-        )
+class ObjUpdate(ObjBase):
+    pass
+
+class Obj(ObjBase, hasWebId):
+    pass
+
     
-class ObjUpdate(Obj):
-    pass
-# pode mudar o parent ???
-    # Name: hasName | None
-    # Description: hasDescription | None
+class ObjOutput(ObjBaseModel):
+    
+    name: NameField | None
+    description: DescriptionField | None
+    client_id: ClientIdField | None
+    attributes: AttributeField | None
+    metadata: MetadataField | None
 
+    @field_validator("name")
+    @classmethod
+    def check_special_char(_, name: str) -> str:
+        return check_invalid_char(name)
 
 
 class hasLinks:
@@ -123,12 +137,12 @@ class hasLinks:
         alias='Links',
         serialization_alias='Links',
         default=[]
-        # frozen=True
         )]
     
 
 class SingleOutput(Obj, hasLinks):
     pass
+
 
 class ListOutput(BaseModel, hasLinks):
     list_: Annotated[list[Obj], Field(

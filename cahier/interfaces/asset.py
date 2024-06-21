@@ -1,8 +1,8 @@
 """"""
-from typing import Protocol, Tuple
+from typing import Protocol, Tuple, Any
 
 from cahier.schemas.objects import ObjEnum
-from cahier.schemas.schemas import SingleOutput, ListOutput, WebId, Obj
+from cahier.schemas.schemas import SingleOutput, ListOutput, WebId, ObjInput
 
 ################################################################################
 
@@ -16,12 +16,12 @@ class AssetServiceInterface(Protocol):
         """"""
         pass
     
-    def get_all_by_parentwebid_and_type(self, children_type: ObjEnum, 
-                                        parent_webid: WebId, parent_type: ObjEnum | None)->ListOutput:
+    def get_all_by_webid(self, parent: ObjEnum, children: ObjEnum,
+                                webid: WebId, query_dict: dict[str, Any])->ListOutput:
         """"""
         pass
     
-    def add_one_and_check_parent(self, parent_type: ObjEnum, parent_webid: WebId, obj:Obj)->None:
+    def add_one_and_check_parent(self, parent: ObjEnum, children: ObjEnum, webid: WebId, obj:ObjInput)->None:
         """"""
         pass
     
