@@ -1,53 +1,68 @@
 """ Map Objects and hierarchies """
 
-from enum import Enum
+import os
+from typing import Annotated, Literal, Type, Any
 
-from cahier.schemas.base_objects import _BaseObj
+from cahier.schemas.base_objects import BaseObj
 from cahier.schemas.loader import load_all_plugins
+from cahier.schemas.makeenums import make_enum, name
+from pydantic import BaseModel, Field, field_validator
 
 ###############################################################################
 
-load_all_plugins()
+load_all_plugins(os.path.dirname(__file__), "plugins")
 
 
-def make_enum(base_class):
+class UtilsObjEnum:
+    
+    @classmethod
+    def init_class(cls, classes_list: list[BaseObj]):
+        cls.__base_map = {name(x): x.base_type() for x in classes_list}
+        cls.__parent_map = {x.base_type(): x.parent() for x in classes_list}
+        cls.__init_map = {name(x): x for x in classes_list}
 
-    deriveds = [
-        [c for c in cls.__subclasses__()] for cls in base_class.__subclasses__()
-    ]
-    nested_classes = [item for sublist in deriveds for item in sublist]
+    def parent_of(self, child):
+        cls = self.__class__
+        base_child = cls.__base_map[child.name]
+        base_parent = cls.__base_map[self.name]
+        possible_parents = cls.__parent_map[base_child]
+        return base_parent in possible_parents
 
-    def name(x):
-        return x.__name__.lower()
+    def make(self, **kwargs):
+        cls = self.__class__
+        return cls.__init_map[self.name](**kwargs)
 
-    types_map = {name(x): name(x) for x in nested_classes}
-    base_map = {name(x): x.base_type() for x in nested_classes}
-    parent_map = {x.base_type(): x.parent() for x in nested_classes}
-    init_map = {name(x): x for x in nested_classes}
 
-    class UtilsObjEnum:
-        def parent_of(self, child):
-            base_child = base_map[child.name]
-            base_parent = base_map[self.name]
-            possible_parents = parent_map[base_child]
-            return base_parent in possible_parents
+# ESSE TYPE HINT TEM QUE FUNCIONAR
+ObjEnum: Type[UtilsObjEnum] = make_enum(base_class=BaseObj, enum_base=UtilsObjEnum)
 
-        def make(self, **kwargs):
-            return init_map[self.name](**kwargs)
 
-    ObjEnum = Enum(
-        "ObjEnum",
-        types_map,
-        module="objects",
-        qualname="objects.ObjEnum",
-        type=UtilsObjEnum,
+sortOrderLiteral = Literal["Asc", "Desc", "Ascending", "Descending"]
+
+
+class ReadAllOptions(BaseModel):
+    """"""
+
+    field_filter: Annotated[list[str] | None, Field(alias="fieldFilter")] = None
+    field_filter_like: Annotated[list[str] | None, Field(alias="fieldFilterLike")] = (
+        None
     )
-    return ObjEnum
+    search_full_hierarchy: Annotated[
+        bool | None, Field(alias="searchFullHierarchy")
+    ] = None
+    sort_field: Annotated[str | None, Field(alias="sortField")] = None
+    sort_order: Annotated[sortOrderLiteral | None, Field(alias="sortOrder")] = (
+        None  # fazer field validation para tolower()
+    )
+    start_index: Annotated[int | None, Field(alias="startIndex")] = None
+    max_count: Annotated[int | None, Field(alias="maxCount")] = None
+    selected_fields: Annotated[list[str] | None, Field(alias="selectedFields")] = None
 
+    @field_validator("sort_order")
+    @classmethod
+    def tolower(_, name: str) -> str:
+        return name.lower()
 
-ObjEnum = make_enum(
-    _BaseObj,
-)
 
 if __name__ == "__main__":
     pass

@@ -11,33 +11,34 @@ def import_module(name: str):
     return importlib.import_module(f"{__package__}.{name}")
 
 
-TARGET_FOLDER = "plugins"
+def file_to_module_name(file: str, tgt_folder: str) -> str:
+    return f"{tgt_folder}.{file}".replace(".py", "")
 
 
-def file_to_module_name(file: str) -> str:
-    return f"{TARGET_FOLDER}.{file}".replace(".py", "")
+def read_all_files(path: str, tgt_folder: str) -> list[str]:
+    return list(next(os.walk(f"{path}/{tgt_folder}"), (None, None, []))[2])
 
 
-def read_all_files(path: str) -> list[str]:
-    return list(next(os.walk(f"{path}/{TARGET_FOLDER}"), (None, None, []))[2])
-
-
-def get_plugins(path: str) -> list[str]:
+def get_plugins(path: str, tgt_folder: str) -> list[str]:
     """Get the python files from parent 'plugin' folder."""
 
-    walk_list: list[str] = read_all_files(path)
+    walk_list: list[str] = read_all_files(path, tgt_folder)
 
     return [
-        file_to_module_name(x)
+        file_to_module_name(x, tgt_folder)
         for x in walk_list
         if x.endswith(".py") and x.startswith("__init__") is False
     ]
 
 
-def load_all_plugins() -> None:
+def filter_list(includes: list[str] | None, excludes: list[str] | None):
+    pass
+
+
+def load_all_plugins(path: str, tgt_folder: str) -> None:
     """Loads the plugins defined in the plugins list."""
 
-    plugins = get_plugins(os.path.dirname(__file__))
+    plugins = get_plugins(path, tgt_folder)
     assert len(plugins) > 0, "No Plugins loaded"
     for plugin_file in plugins:
         import_module(plugin_file)

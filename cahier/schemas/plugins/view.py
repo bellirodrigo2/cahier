@@ -2,14 +2,13 @@
 
 from typing import Annotated
 
+from cahier.schemas.base_objects import ElementObj
 from pydantic import Field
-
-from cahier.schemas.base_objects import _ElementObj
 
 ###############################################################################
 
 
-class View(_ElementObj):
+class View(ElementObj):
 
     view_str: Annotated[
         str,

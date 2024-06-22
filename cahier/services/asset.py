@@ -6,8 +6,8 @@ from cahier.interfaces.events import EventHandlerInterface
 from cahier.interfaces.repository import ReadAllOptions, RepositoryInterface
 from cahier.schemas.factory import make_list_output, make_single_output
 from cahier.schemas.objects import ObjEnum
-from cahier.schemas.schemas import WebId
-from cahier.schemas.schemas import ListOutput, Obj, ObjInput, SingleOutput
+from cahier.schemas.schemas import (ListOutput, Obj, ObjInput, SingleOutput,
+                                    WebId)
 
 ###############################################################################
 

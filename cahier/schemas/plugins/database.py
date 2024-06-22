@@ -2,14 +2,13 @@
 
 from typing import Annotated
 
+from cahier.schemas.base_objects import RootObj
 from pydantic import Field
-
-from cahier.schemas.base_objects import _RootObj
 
 ###############################################################################
 
 
-class DataBase(_RootObj):
+class DataBase(RootObj):
 
     db_field: Annotated[
         str,

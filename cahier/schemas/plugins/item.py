@@ -3,10 +3,9 @@
 from enum import Enum
 from typing import Annotated
 
-from pydantic import Field
-
-from cahier.schemas.base_objects import _ItemObj
+from cahier.schemas.base_objects import ItemObj
 from cahier.schemas.timestamp import Timestamp
+from pydantic import Field
 
 ###############################################################################
 
@@ -20,7 +19,7 @@ class DataTypeEnum(Enum):
     timestamp = Timestamp
 
 
-class Item(_ItemObj):
+class Item(ItemObj):
 
     # path: pathField
 

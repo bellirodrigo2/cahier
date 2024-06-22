@@ -2,14 +2,13 @@
 
 from typing import Annotated
 
+from cahier.schemas.base_objects import NodeObj
 from pydantic import Field
-
-from cahier.schemas.base_objects import _NodeObj
 
 ###############################################################################
 
 
-class Node(_NodeObj):
+class Node(NodeObj):
 
     # path: pathField
 

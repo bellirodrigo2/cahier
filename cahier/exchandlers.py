@@ -2,7 +2,7 @@
 
 from typing import Callable
 
-from fastapi import Request, status
+from fastapi import Request
 from fastapi.responses import JSONResponse
 
 from .exceptions import CahierException

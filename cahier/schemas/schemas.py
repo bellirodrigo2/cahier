@@ -2,16 +2,9 @@
 
 from typing import Annotated, Any, Generator
 
-from pydantic import (
-    AnyUrl,
-    BaseModel,
-    BeforeValidator,
-    ConfigDict,
-    Field,
-    field_validator,
-)
-
 from cahier.schemas.webid import WebId, hasWebId, make_webid
+from pydantic import (AnyUrl, BaseModel, BeforeValidator, ConfigDict, Field,
+                      field_validator)
 
 SPECIAL_CHARS = ["*", "?", ";", "{", "}", "[", "]", "|", "\\", "`", "'", '"', ":"]
 PATH_DELIM = "/"

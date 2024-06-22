@@ -2,12 +2,11 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Body, Depends, Path, Query, Request
-
 from cahier.interfaces.asset import AssetServiceInterface
 from cahier.schemas.objects import ObjEnum
 from cahier.schemas.schemas import ListOutput, ObjInput, SingleOutput, WebId
 from cahier.services.dependecy_injection import get_asset_service
+from fastapi import APIRouter, Body, Depends, Path, Query, Request
 
 ###############################################################################
 
@@ -31,6 +30,7 @@ def read_all(
     target: ObjEnum = Path(title="..."),
     children: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
+    # https://stackoverflow.com/questions/62279710/fastapi-variable-query-parameters
     fieldFilter: Annotated[list[str] | None, Query(...)] = None,
     fieldFilterLike: Annotated[list[str] | None, Query(...)] = None,
     searchFullHierarchy: Annotated[bool | None, Query(...)] = None,
@@ -40,12 +40,17 @@ def read_all(
     maxCount: Annotated[int | None, Query(...)] = None,
     selectedFields: Annotated[str | None, Query(...)] = None,
 ):
+
     queries = dict(request.query_params)
+
     if "fieldFilterLike" in queries:
         queries["fieldFilterLike"] = fieldFilterLike
 
     if "fieldFilter" in queries:
         queries["fieldFilter"] = fieldFilter
+
+    if "selectedFields" in queries:
+        queries["selectedFields"] = selectedFields
 
     # set HEADERS for pagination
     # total objects ????  teria que saber i numero total de items

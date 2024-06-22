@@ -7,7 +7,7 @@ from pydantic import BaseModel
 ##############################################################################
 
 
-class _BaseObj(BaseModel, ABC):
+class BaseObj(BaseModel, ABC):
     @classmethod
     @abstractmethod
     def base_type(cls) -> str:
@@ -19,7 +19,7 @@ class _BaseObj(BaseModel, ABC):
         pass
 
 
-class _ServerObj(_BaseObj):
+class ServerObj(BaseObj):
     @classmethod
     def base_type(cls) -> str:
         return "server"
@@ -29,7 +29,7 @@ class _ServerObj(_BaseObj):
         return []
 
 
-class _RootObj(_BaseObj):
+class RootObj(BaseObj):
     @classmethod
     def base_type(cls) -> str:
         return "root"
@@ -39,7 +39,7 @@ class _RootObj(_BaseObj):
         return ["server"]
 
 
-class _ElementObj(_BaseObj):
+class ElementObj(BaseObj):
     @classmethod
     def base_type(cls) -> str:
         return "element"
@@ -49,7 +49,7 @@ class _ElementObj(_BaseObj):
         return ["root"]
 
 
-class _NodeObj(_BaseObj):
+class NodeObj(BaseObj):
     @classmethod
     def base_type(cls) -> str:
         return "node"
@@ -59,7 +59,7 @@ class _NodeObj(_BaseObj):
         return ["root", "node"]
 
 
-class _ItemObj(_BaseObj):
+class ItemObj(BaseObj):
     @classmethod
     def base_type(cls) -> str:
         return "item"
