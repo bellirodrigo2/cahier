@@ -22,15 +22,21 @@ pylint = "^3.2.3"
 flake8 = "^7.0.0"
 poethepoet = "^0.26.1"
 ruff = "^0.4.8"
+black = "^24.4.2"
+isort = "^5.13.2"
+flake8-bandit = "^4.1.1"
+flake8-bugbear = "^24.4.26"
+pep8-naming = "^0.14.1"
 
 [tool.poetry.group.sqlback.dependencies]
 sqlalchemy = "^2.0.30"
 
 [tool.poe.tasks]
-# run poe 'task'
+#>>> poe 'task'
 test = "pytest -s"
 dev = 'fastapi dev ./cahier/main.py'
 run = 'fastapi run ./cahier/main.py'
+format = 'black ./cahier/'
 
 [build-system]
 requires = ["poetry-core"]

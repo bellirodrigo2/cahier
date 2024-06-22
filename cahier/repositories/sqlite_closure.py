@@ -1,4 +1,4 @@
-# """ Closure Repository using SQLITE """    
+# """ Closure Repository using SQLITE """
 # import sqlite3
 
 # from ..schemas import WebId, Obj
@@ -8,7 +8,7 @@
 # create_table_str = '''
 #             DROP TABLE IF EXISTS data_table;
 #             DROP TABLE IF EXISTS tree;
-            
+
 #             -- Our data
 #             CREATE TABLE data_table
 #                     (id INTEGER PRIMARY KEY,
@@ -31,18 +31,18 @@
 
 
 # class ClosureRepository:
-    
+
 #     @staticmethod
 #     def bootstrap(cls)->None:
 #         # PROBLEMA AQUI....PQ cursor nao tem no static
 #         cursor.executescript(create_table_str)
-    
+
 #     def get_one(self, web_id: WebId)->Obj:
 #         pass
-    
+
 #     def get_all(self, web_id: WebId)->list[Obj]:
 #         pass
-    
+
 #     def add_one(self, parent_webid: WebId, obj: Obj)->None:
 #         pass
 
@@ -57,7 +57,7 @@
 #         cursor.executescript('''
 #             DROP TABLE IF EXISTS data_table;
 #             DROP TABLE IF EXISTS tree;
-            
+
 #             -- Our data
 #             CREATE TABLE data_table
 #                     (id INTEGER PRIMARY KEY,
@@ -131,7 +131,7 @@
 #     # link a child node/subtree to a new parent
 #     def link_child(self, row_parent, row_child):
 #         self.cursor.execute('''
-#             INSERT OR REPLACE INTO tree(parent, child, depth) 
+#             INSERT OR REPLACE INTO tree(parent, child, depth)
 #                 SELECT p.parent, c.child, p.depth + c.depth + 1
 #                 FROM tree p, tree c
 #                 WHERE p.child = ? AND c.parent = ?''', (row_parent, row_child))

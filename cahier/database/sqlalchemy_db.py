@@ -1,14 +1,16 @@
 """ SQLAlchemy Database """
-from typing import Generator, Any
+
+from typing import Any, Generator
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 
 ################################################################################
 
-def bootstrap(url: str, **kwargs)-> sessionmaker:
+
+def bootstrap(url: str, **kwargs) -> sessionmaker:
     """ """
-        
+
     engine = create_engine(url, **kwargs)
 
     return sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -17,7 +19,7 @@ def bootstrap(url: str, **kwargs)-> sessionmaker:
 DbType = Generator[Session, Any, None]
 
 
-def get_db(SessionLocal: sessionmaker)-> DbType:
+def get_db(SessionLocal: sessionmaker) -> DbType:
     db = SessionLocal()
     try:
         yield db

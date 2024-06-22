@@ -1,18 +1,15 @@
 """ Node Object """
-from typing import Annotated
+
 from enum import Enum
+from typing import Annotated
 
 from pydantic import Field
 
-from cahier.schemas.timestamp import Timestamp
 from cahier.schemas.base_objects import _ItemObj
+from cahier.schemas.timestamp import Timestamp
 
-################################################################################
+###############################################################################
 
-# pathField = Annotated[str, Field(
-#         alias='Path',
-#         serialization_alias='Path',
-#     )]
 
 class DataTypeEnum(Enum):
     string = str
@@ -22,11 +19,15 @@ class DataTypeEnum(Enum):
     byte = bytes
     timestamp = Timestamp
 
+
 class Item(_ItemObj):
-   
+
     # path: pathField
-    
-    data_source: Annotated[str, Field(
-        alias='DataSource',
-        serialization_alias='DataSource',
-    )]
+
+    data_source: Annotated[
+        str,
+        Field(
+            alias="DataSource",
+            serialization_alias="DataSource",
+        ),
+    ]

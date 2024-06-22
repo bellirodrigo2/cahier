@@ -12,8 +12,9 @@ env/
 .dmypy.json
 dmypy.json
 
-#pycharm
+#ide´s
 .idea/
+.vscode/
 
 #quick tests
 testingo.py
