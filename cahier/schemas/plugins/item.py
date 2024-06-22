@@ -23,9 +23,6 @@ class DataTypeEnum(Enum):
     timestamp = Timestamp
 
 class Item(_ItemObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'item'
    
     # path: pathField
     

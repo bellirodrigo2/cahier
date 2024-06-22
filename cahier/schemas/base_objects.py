@@ -13,10 +13,6 @@ class _BaseObj(BaseModel, ABC):
         pass
     @classmethod
     @abstractmethod
-    def obj_type(cls)->str:
-        pass
-    @classmethod
-    @abstractmethod
     def parent(cls)->list[str]:
         pass
     

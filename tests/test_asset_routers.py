@@ -124,10 +124,10 @@ def test_getall_wrongWEBID(id, mock_asset_service):
     mock_asset_service.get_all_by_webid.assert_not_called()
     mock_asset_service.get_one_by_webid.assert_not_called()
 
+
+def test_getall_ok_w_query_params(mock_asset_service):
     
-@pytest.mark.parametrize('id', ['1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'])
-def test_getall_ok_w_query_params(id, mock_asset_service):
-    
+    id = '1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'
     parent_path = ObjEnum.node
     child_parent = ObjEnum.item
     
@@ -145,6 +145,41 @@ def test_getall_ok_w_query_params(id, mock_asset_service):
         webid=UUID(id), query_dict=expected_query_dict
         )
     mock_asset_service.get_one_by_webid.assert_not_called()
+ 
+ 
+@pytest.mark.parametrize('q', [
+    'fieldFilter=F1111&fieldFilter=F2222&selectedFields=selll', 
+    'fieldFilterLike=FILT1&fieldFilterLike=FILT2&startIndex=3', 
+    'searchFullHierarchy=True&maxCount=1000&sortOrder=ASC'
+    ])
+def test_getall_ok_w_query_params(q, mock_asset_service):
+    
+    id = '1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'
+    parent_path = ObjEnum.node
+    child_parent = ObjEnum.item
+    
+    response = client.get(f'/{parent_path.name}/{id}/{child_parent.name}?{q}')
+    
+    assert response.status_code == 200
+    mock_asset_service.get_all_by_webid.assert_called_once()
+    mock_asset_service.get_one_by_webid.assert_not_called()
+
+@pytest.mark.parametrize('q', [
+    'searchFullHierarchy=foobar',
+    'startIndex=foobar',
+    ])
+def test_getall_NOK_w_query_params(q, mock_asset_service):
+    
+    id = '1c8accd9-2e70-11ef-a48f-3024a9fbd4aa'
+    parent_path = ObjEnum.node
+    child_parent = ObjEnum.item
+    
+    response = client.get(f'/{parent_path.name}/{id}/{child_parent.name}?{q}')
+    
+    assert response.status_code == 422
+    mock_asset_service.get_all_by_webid.assert_not_called()
+    mock_asset_service.get_one_by_webid.assert_not_called()
+
  
 @pytest.mark.parametrize('id, body', 
                          [('1c8accd9-2e70-11ef-a48f-3024a9fbd4aa', oe) 

@@ -8,6 +8,8 @@ from cahier.schemas.objects import ObjEnum #, obj_factory, is_valid_parent
 
 ################################################################################
 
+def obj_type(x): return x.__class__.__name__.lower()
+
 @pytest.fixture
 def setup_data():
     pass
@@ -33,7 +35,7 @@ def test_factories_assetserver():
     arg = 'http://example.com:8000/'
     # o = obj_factory(ObjEnum.assetserver, SourceURL= arg)
     o = ObjEnum.assetserver.make(SourceURL= arg)
-    assert o.obj_type() == 'assetserver'
+    assert obj_type(o) == 'assetserver'
     assert o.base_type() == 'server'
     assert str(o.source_url) == arg
 
@@ -42,7 +44,7 @@ def test_factories_database():
     arg = 'some_db_field'
     # o = obj_factory(ObjEnum.database, DBField= arg)
     o = ObjEnum.database.make(DBField=arg)
-    assert o.obj_type() == 'database'
+    assert obj_type(o) == 'database'
     assert o.base_type() == 'root'
     assert o.db_field == arg
 
@@ -50,7 +52,7 @@ def test_factories_database():
 def test_factories_view():    
     arg = 'some_view_string'
     o = ObjEnum.view.make(ViewStr= arg)
-    assert o.obj_type() == 'view'
+    assert obj_type(o) == 'view'
     assert o.base_type() == 'element'
     assert o.view_str == arg
   
@@ -58,7 +60,7 @@ def test_factories_node():
     arg = 'templated_NOD1E'
     # o = obj_factory(ObjEnum.node, Template= arg)
     o = ObjEnum.node.make(Template= arg)
-    assert o.obj_type() == 'node'
+    assert obj_type(o) == 'node'
     assert o.base_type() == 'node'
     assert o.template == arg
 
@@ -67,7 +69,7 @@ def test_factories_item():
     arg = 'source_ITEM'
     o = ObjEnum.item.make(DataSource= arg)
     # o = obj_factory(ObjEnum.item, DataSource= arg)
-    assert o.obj_type() == 'item'
+    assert obj_type(o) == 'item'
     assert o.base_type() == 'item'
     assert o.data_source == arg
 

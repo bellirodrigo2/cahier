@@ -14,9 +14,6 @@ from cahier.schemas.base_objects import _NodeObj
 #     )]
 
 class Node(_NodeObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'node'
     
     # path: pathField
     

@@ -9,9 +9,6 @@ from cahier.schemas.base_objects import _ServerObj
 ################################################################################
 
 class AssetServer(_ServerObj):
-    @classmethod
-    def obj_type(cls)->str:
-        return 'assetserver'
     
     source_url: Annotated[AnyUrl, Field(
         alias='SourceURL',
