@@ -3,9 +3,10 @@
 from enum import Enum
 from typing import Annotated
 
+from pydantic import Field
+
 from cahier.schemas.base_objects import ItemObj
 from cahier.schemas.timestamp import Timestamp
-from pydantic import Field
 
 ###############################################################################
 

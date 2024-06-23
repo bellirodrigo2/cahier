@@ -2,8 +2,9 @@
 
 from typing import Annotated
 
-from cahier.schemas.base_objects import ServerObj
 from pydantic import AnyUrl, Field
+
+from cahier.schemas.base_objects import ServerObj
 
 ###############################################################################
 

@@ -1,28 +1,42 @@
+""""""
 from functools import lru_cache
-from typing import Optional
+from dotenv import find_dotenv, load_dotenv
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+load_dotenv(find_dotenv(".env"))
 
-class DBSettings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_prefix="APP_", env_file=".env", env_file_encoding="utf-8", extra="ignore"
-    )
+# # # # # # # # # # # # # # # # # # #
+# ler sobre mais opções...........
+# https://docs.pydantic.dev/latest/concepts/pydantic_settings/#validation-of-default-values
+# # # # # # # # # # # # # # # # # # #
 
-    # Database configuration
-    db_host: str
-    db_port: str
-    db_user: str
-    db_password: str
-    db_name: str
-    db_dsn: str
-    db_overflow_size: int = 10
-    db_max_pool_size: int = 5
+class FieldLabelSetting(BaseSettings):
+    
+    default_name: str
+    name_min_length: int
+    name_max_length: int
+    
+    default_description: str
+    description_min_length: int
+    description_max_length: int
 
+    model_config = SettingsConfigDict(env_file_encoding='utf-8', env_prefix='fieldlabel_')
+
+class SQLAlchemySettings(BaseSettings):
+    database_url: str
+    test_database_url: str
+    
+    model_config = SettingsConfigDict(env_file_encoding='utf-8', env_prefix='sqlalchemy_')
 
 @lru_cache
-def get_db_settings(env: Optional[str] = None) -> DBSettings:
-    if env is None:
-        return DBSettings()
+def get_sqlalchemy_settings():
+    return SQLAlchemySettings()
 
-    return DBSettings(_env_file=f".env.{env}")
+@lru_cache
+def get_fieldrules_setting():
+    return FieldLabelSetting()
+
+if __name__ == '__main__':
+    print(get_fieldrules_setting())
+    print(get_sqlalchemy_settings())

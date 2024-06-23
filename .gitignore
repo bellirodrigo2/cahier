@@ -5,7 +5,10 @@ env/
 **/__pycache__/
 
 # pytest
-.pytest_cache
+.pytest_cache/
+
+#ruff 
+.ruff_cache/
 
 # mypy
 .mypy_cache/

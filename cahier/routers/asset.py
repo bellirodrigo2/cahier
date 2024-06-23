@@ -2,11 +2,12 @@
 
 from typing import Annotated
 
+from fastapi import APIRouter, Body, Depends, Path, Query, Request
+
 from cahier.interfaces.asset import AssetServiceInterface
 from cahier.schemas.objects import ObjEnum
 from cahier.schemas.schemas import ListOutput, ObjInput, SingleOutput, WebId
 from cahier.services.dependecy_injection import get_asset_service
-from fastapi import APIRouter, Body, Depends, Path, Query, Request
 
 ###############################################################################
 

@@ -2,8 +2,9 @@
 
 from typing import Annotated
 
-from cahier.schemas.base_objects import ElementObj
 from pydantic import Field
+
+from cahier.schemas.base_objects import ElementObj
 
 ###############################################################################
 

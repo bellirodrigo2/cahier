@@ -1,12 +1,13 @@
 """ Map Objects and hierarchies """
 
 import os
-from typing import Annotated, Literal, Type, Any
+from typing import Annotated, Literal, Type
+
+from pydantic import BaseModel, Field, field_validator
 
 from cahier.schemas.base_objects import BaseObj
 from cahier.schemas.loader import load_all_plugins
 from cahier.schemas.makeenums import make_enum, name
-from pydantic import BaseModel, Field, field_validator
 
 ###############################################################################
 
@@ -14,7 +15,7 @@ load_all_plugins(os.path.dirname(__file__), "plugins")
 
 
 class UtilsObjEnum:
-    
+
     @classmethod
     def init_class(cls, classes_list: list[BaseObj]):
         cls.__base_map = {name(x): x.base_type() for x in classes_list}
@@ -37,7 +38,7 @@ class UtilsObjEnum:
 ObjEnum: Type[UtilsObjEnum] = make_enum(base_class=BaseObj, enum_base=UtilsObjEnum)
 
 
-sortOrderLiteral = Literal["Asc", "Desc", "Ascending", "Descending"]
+SortOrderLiteral = Literal["Asc", "Desc", "Ascending", "Descending"]
 
 
 class ReadAllOptions(BaseModel):
@@ -51,7 +52,7 @@ class ReadAllOptions(BaseModel):
         bool | None, Field(alias="searchFullHierarchy")
     ] = None
     sort_field: Annotated[str | None, Field(alias="sortField")] = None
-    sort_order: Annotated[sortOrderLiteral | None, Field(alias="sortOrder")] = (
+    sort_order: Annotated[SortOrderLiteral | None, Field(alias="sortOrder")] = (
         None  # fazer field validation para tolower()
     )
     start_index: Annotated[int | None, Field(alias="startIndex")] = None
@@ -60,7 +61,7 @@ class ReadAllOptions(BaseModel):
 
     @field_validator("sort_order")
     @classmethod
-    def tolower(_, name: str) -> str:
+    def tolower(cls, name: str) -> str:
         return name.lower()
 
 
