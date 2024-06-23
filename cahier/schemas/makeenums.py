@@ -10,10 +10,17 @@ def name(x):
     return x.__name__.lower()
 
 
-class EnumBase(Protocol):
+class EnumBase:
+    # @classmethod
+    # def init_class(cls, classes_list):
+        # pass
     @classmethod
-    def init_class(cls, classes_list):
-        pass
+    def init_class(cls, classes_list: list):
+        cls.__init_map = {name(x): x for x in classes_list}
+
+    def make(self, **kwargs):
+        cls = self.__class__
+        return cls.__init_map[self.name](**kwargs)
 
 
 def get_deriveds(base_class: Type):

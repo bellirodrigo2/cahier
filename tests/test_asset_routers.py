@@ -31,8 +31,8 @@ class PrintMiddleware(BaseHTTPMiddleware):
 # https://opensource.com/article/23/4/using-mocks-python
 # https://aaronlelevier.github.io/python-unit-testing-with-magicmock/
 mock_session = MagicMock()
-mock_session.get_one_by_webid.return_value = {"Id": "foobar", "Attributes": {}}
-mock_session.get_all_by_parentwebid.return_value = {"Id": "foobar", "Attributes": {}}
+mock_session.get_one_by_webid.return_value = {"ClientId": "foobar", "Attributes": {}}
+mock_session.get_all_by_parentwebid.return_value = {"ClientId": "foobar", "Attributes": {}}
 # mock_session.FUNCNAMEHERE.side_effect = []
 
 

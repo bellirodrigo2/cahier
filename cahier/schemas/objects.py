@@ -1,26 +1,27 @@
 """ Map Objects and hierarchies """
 
 import os
-from typing import Annotated, Literal, Type
+from typing import Annotated, Type
+from enum import Enum
 
 from pydantic import BaseModel, Field, field_validator
 
 from cahier.schemas.base_objects import BaseObj
 from cahier.schemas.loader import load_all_plugins
-from cahier.schemas.makeenums import make_enum, name
+from cahier.schemas.makeenums import make_enum, name, EnumBase
 
 ###############################################################################
 
 load_all_plugins(os.path.dirname(__file__), "plugins")
 
 
-class UtilsObjEnum:
+class UtilsObjEnum(EnumBase):
 
     @classmethod
     def init_class(cls, classes_list: list[BaseObj]):
         cls.__base_map = {name(x): x.base_type() for x in classes_list}
         cls.__parent_map = {x.base_type(): x.parent() for x in classes_list}
-        cls.__init_map = {name(x): x for x in classes_list}
+        super().init_class(classes_list)
 
     def parent_of(self, child):
         cls = self.__class__
@@ -29,17 +30,16 @@ class UtilsObjEnum:
         possible_parents = cls.__parent_map[base_child]
         return base_parent in possible_parents
 
-    def make(self, **kwargs):
-        cls = self.__class__
-        return cls.__init_map[self.name](**kwargs)
-
+    def children_of(self, child):
+        pass
 
 # ESSE TYPE HINT TEM QUE FUNCIONAR
 ObjEnum: Type[UtilsObjEnum] = make_enum(base_class=BaseObj, enum_base=UtilsObjEnum)
 
 
-SortOrderLiteral = Literal["Asc", "Desc", "Ascending", "Descending"]
-
+class SortOrder(Enum):
+    Asc = 'Asc'
+    Desc = 'Desc'
 
 class ReadAllOptions(BaseModel):
     """"""
@@ -52,7 +52,7 @@ class ReadAllOptions(BaseModel):
         bool | None, Field(alias="searchFullHierarchy")
     ] = None
     sort_field: Annotated[str | None, Field(alias="sortField")] = None
-    sort_order: Annotated[SortOrderLiteral | None, Field(alias="sortOrder")] = (
+    sort_order: Annotated[SortOrder | None, Field(alias="sortOrder")] = (
         None  # fazer field validation para tolower()
     )
     start_index: Annotated[int | None, Field(alias="startIndex")] = None

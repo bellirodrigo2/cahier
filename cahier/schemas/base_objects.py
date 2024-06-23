@@ -16,6 +16,10 @@ class BaseObj(BaseModel, ABC):
     @classmethod
     @abstractmethod
     def parent(cls) -> list[str]:
+        pass    
+    @classmethod
+    @abstractmethod
+    def children(cls) -> list[str]:
         pass
 
 
@@ -28,6 +32,10 @@ class ServerObj(BaseObj):
     def parent(cls) -> list[str]:
         return []
 
+    @classmethod
+    def children(cls) -> list[str]:
+        return  ['root']
+
 
 class RootObj(BaseObj):
     @classmethod
@@ -38,6 +46,9 @@ class RootObj(BaseObj):
     def parent(cls) -> list[str]:
         return ["server"]
 
+    @classmethod
+    def children(cls) -> list[str]:
+        return  ['element', 'node']
 
 class ElementObj(BaseObj):
     @classmethod
@@ -48,6 +59,9 @@ class ElementObj(BaseObj):
     def parent(cls) -> list[str]:
         return ["root"]
 
+    @classmethod
+    def children(cls) -> list[str]:
+        return  []
 
 class NodeObj(BaseObj):
     @classmethod
@@ -58,6 +72,9 @@ class NodeObj(BaseObj):
     def parent(cls) -> list[str]:
         return ["root", "node"]
 
+    @classmethod
+    def children(cls) -> list[str]:
+        return  ['node', 'item']
 
 class ItemObj(BaseObj):
     @classmethod
@@ -67,3 +84,7 @@ class ItemObj(BaseObj):
     @classmethod
     def parent(cls) -> list[str]:
         return ["node", "item"]
+
+    @classmethod
+    def children(cls) -> list[str]:
+        return  ['item']

@@ -1,6 +1,28 @@
 ############################################################################################
 $$$$ NEXT STEP: onjinput, obj, objupdate, objputput
 
+##############################################
+NO FILE schemas
+# USAR ALIAS GENERATOR PARA CAMELCASE... ALIAS E VALIDATION_ALIAS    
+    # https://docs.pydantic.dev/2.0/api/alias_generators/
+    #ESTUDATR COMO EXTENDER MODELOS COM BASECLASS E VALIDAR PARA DERIVED EM SEGUNDO NIVEL
+    # PRIMEIRO NIVEL, FASTAPI CHECA BASECLASS E API LAYER CHECK IF DERIVED CLASS IS VALID
+
+fazer prototipo de node mais rapido...com item somente key : value (name, type)
+
+fazer id que tenhainformação de tipo (node), (db)... id de mongodb ???
+
+tirar o eventhandler e deixar logging no nivel de aplicação
+
+loader retorna oks e errors
+loader com include_id, exclude_if
+
+PENSAR SOBRE ISSO ABAIXO..........
+fazer interpolated, recorded, plot, summary, value, endvalue (currvalue)
+com pluggins também...com referencia aos objenums que podem acessar esses valores
+
+desacoplar o metadata e keywords como classes proprias ????
+
 TESTAR O ASSET SERVICE COM IN MEMORY...tree_lib
     https://martinfowler.com/bliki/InMemoryTestDatabase.html
 
