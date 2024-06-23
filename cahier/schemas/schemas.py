@@ -35,7 +35,7 @@ def check_invalid_char(name) -> str:
     return name
 
 
-strip_str = BeforeValidator(lambda x: str.strip(str(x)))
+# strip_str = BeforeValidator(lambda x: str.strip(str(x)))
 
 
 def make_clientid():
@@ -46,33 +46,29 @@ def make_clientid():
 
 NameField = Annotated[
     str,
-    strip_str,
+    # strip_str,
     Field(
         description="Name Field Description",
         min_length=settings.name_min_length,
         max_length=settings.name_max_length,
-        # alias="Name",
-        # validation_alias="Name",
         default_factory=lambda: next(name_gen),
     ),
 ]
 
 DescriptionField = Annotated[
     str,
-    strip_str,
+    # strip_str,
     Field(
         description="Description Field Description",
         min_length=settings.description_min_length,
         max_length=settings.description_max_length,
-        # alias="Description",
-        # validation_alias="Description",
         default=settings.default_description,
     ),
 ]
 
 ClientIdField = Annotated[
     str,
-    strip_str,
+    # strip_str,
     Field(
         description="ClientId Field Description",
         min_length=settings.clientid_min_length,
@@ -106,6 +102,8 @@ class ObjBaseModel(BaseModel):
         populate_by_name=True,
         use_enum_values=True,
         frozen=True,
+        str_strip_whitespace=True,
+        extra='allow'
     )
 
 
@@ -116,6 +114,8 @@ class ObjInput(ObjBaseModel):
     client_id: ClientIdField
     attributes: AttributeField
     keywords: KeywordsField
+
+    # model_config = ConfigDict(json_schema_extra={'examples': [{'a': 'Foo'}]})
 
     @field_validator("name")
     @classmethod
@@ -135,13 +135,14 @@ class Obj(ObjInput, hasWebId):
     pass
 
 
-class ObjOutput(ObjUpdate):
+class ObjOutput(ObjUpdate, hasWebId):
     pass
 
 
 class hasLinks:
     links: Annotated[
-        list[AnyUrl], Field(alias="Links", serialization_alias="Links", default=[])
+        list[AnyUrl], Field(
+            default=[])
     ]
 
 
@@ -153,7 +154,8 @@ class ListOutput(BaseModel, hasLinks):
     list_: Annotated[
         list[Obj],
         Field(
-            alias="List",
-            serialization_alias="List",
+            # alias="List",
+            # serialization_alias="List",
+            default=[]
         ),
     ]

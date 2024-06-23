@@ -1,6 +1,9 @@
 ############################################################################################
 $$$$ NEXT STEP: onjinput, obj, objupdate, objputput
 
+#FAZER OS ITEMS DE ATTRIBUTE NO MESMO NIVEL DO OBJ.... COM EXTRA=True e inheritance
+testarrrr muuito
+
 ##############################################
 NO FILE schemas
 # USAR ALIAS GENERATOR PARA CAMELCASE... ALIAS E VALIDATION_ALIAS    

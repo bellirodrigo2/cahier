@@ -11,9 +11,6 @@ def name(x):
 
 
 class EnumBase:
-    # @classmethod
-    # def init_class(cls, classes_list):
-        # pass
     @classmethod
     def init_class(cls, classes_list: list):
         cls.__init_map = {name(x): x for x in classes_list}
@@ -40,7 +37,7 @@ def make_enum(base_class: Type, enum_base: EnumBase, module: str = __package__):
 
     nested_classes = get_all_deriveds(base_class)
 
-    types_map = {name(x): name(x) for x in nested_classes}
+    types_map = [(name(x), name(x)) for x in nested_classes]
 
     enum_base.init_class(nested_classes)
 

@@ -4,7 +4,8 @@ import os
 from typing import Annotated, Type
 from enum import Enum
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict, AliasGenerator
+from pydantic.alias_generators import to_camel
 
 from cahier.schemas.base_objects import BaseObj
 from cahier.schemas.loader import load_all_plugins
@@ -43,27 +44,27 @@ class SortOrder(Enum):
 
 class ReadAllOptions(BaseModel):
     """"""
-
-    field_filter: Annotated[list[str] | None, Field(alias="fieldFilter")] = None
-    field_filter_like: Annotated[list[str] | None, Field(alias="fieldFilterLike")] = (
-        None
+    model_config = ConfigDict(
+        alias_generator=AliasGenerator(
+            alias=to_camel,
+            validation_alias=to_camel,
+            serialization_alias=to_camel
+            ),
+        populate_by_name=True,
+        use_enum_values=True,
+        frozen=True,
+        str_strip_whitespace=True,
+        extra='allow'
     )
-    search_full_hierarchy: Annotated[
-        bool | None, Field(alias="searchFullHierarchy")
-    ] = None
-    sort_field: Annotated[str | None, Field(alias="sortField")] = None
-    sort_order: Annotated[SortOrder | None, Field(alias="sortOrder")] = (
-        None  # fazer field validation para tolower()
-    )
-    start_index: Annotated[int | None, Field(alias="startIndex")] = None
-    max_count: Annotated[int | None, Field(alias="maxCount")] = None
-    selected_fields: Annotated[list[str] | None, Field(alias="selectedFields")] = None
 
-    @field_validator("sort_order")
-    @classmethod
-    def tolower(cls, name: str) -> str:
-        return name.lower()
-
+    field_filter: Annotated[list[str] | None, Field()] = None
+    field_filter_like: Annotated[list[str] | None, Field()] = None
+    search_full_hierarchy: Annotated[bool | None, Field()] = None
+    sort_field: Annotated[str | None, Field()] = None
+    sort_order: Annotated[SortOrder | None, Field()] = None
+    start_index: Annotated[int | None, Field()] = None
+    max_count: Annotated[int | None, Field()] = None
+    selected_fields: Annotated[list[str] | None, Field()] = None
 
 if __name__ == "__main__":
     pass
