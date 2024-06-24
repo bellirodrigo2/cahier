@@ -2,17 +2,16 @@
 
 from typing import Any, Callable
 
+from cahier.interfaces.events import EventHandlerInterface
 from cahier.interfaces.repository import RepositoryInterface
+from cahier.schemas.factory import make_list_output, make_single_output
 from cahier.schemas.objects import ObjEnum, ReadAllOptions
 from cahier.schemas.schemas import (ListOutput, Obj, ObjInput, SingleOutput,
                                     WebId)
 
 ###############################################################################
 
-def make_list_output():
-    pass
-def make_single_output():
-    pass
+
 class AssetServiceError(Exception):
     pass
 
@@ -26,11 +25,28 @@ def check_hierarchy(parent: ObjEnum, children: ObjEnum):
 class AssetService:
     """"""
 
+    event_handlers: dict[str, Callable[..., None]] = {}
+
     def __init__(
         self,
         get_repo: Callable[[], RepositoryInterface],
+        ev_handler: Callable[[], EventHandlerInterface] | None,
     ) -> None:
         self.__get_repo = get_repo
+        self.ev_handler = ev_handler
+
+    def add_event_handler(self, event_name: str, callback: Callable[..., None]) -> None:
+        if self.ev_handler:
+            self.ev_handler().add_event_handler(
+                event_name=event_name, callback=callback
+            )
+
+    def remove_event_handler(
+        self,
+        event_name: str,
+    ) -> None:
+        if self.ev_handler:
+            self.ev_handler().remove_event_handler(event_name=event_name)
 
     def _add_one(self, webid: WebId, obj: ObjInput) -> None:
         repo: RepositoryInterface = self.__get_repo()
@@ -50,8 +66,22 @@ class AssetService:
 
     def get_one_by_webid(self, webid: WebId, target: ObjEnum) -> SingleOutput:
 
+        if self.ev_handler:
+            self.ev_handler().fire_event(
+                name="pre_read_one",
+                webid=webid,
+                target=target,
+            )
+
         obj: Obj = self._get_one(webid=webid)
 
+        if self.ev_handler:
+            self.ev_handler().fire_event(
+                name="pos_read_one",
+                obj=(obj,),
+            )
+
+        # CAST/ERROR CHECK
         # if attributes is not a valid dict for the target Pydantic model,
         # an ValidationError is raised
         target.make(obj.attributes)

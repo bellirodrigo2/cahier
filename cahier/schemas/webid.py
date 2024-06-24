@@ -1,9 +1,9 @@
 """Cahier Object WebId type."""
 
-from typing import Annotated
+# from typing import Annotated
 from uuid import UUID, uuid1
 
-from pydantic import Field
+# from pydantic import Field
 
 ###############################################################################
 
@@ -14,13 +14,13 @@ def make_webid() -> WebId:
     return uuid1()
 
 
-class hasWebId:
-    web_id: Annotated[
-        WebId,
-        Field(
-            alias="WebId",
-            serialization_alias="WebId",
-            frozen=True,
-            default_factory=make_webid,
-        ),
-    ]
+# class hasWebId:
+#     web_id: Annotated[
+#         WebId,
+#         Field(
+#             alias="WebId",
+#             serialization_alias="WebId",
+#             frozen=True,
+#             default_factory=make_webid,
+#         ),
+#     ]

@@ -13,11 +13,19 @@ def name(x):
 class EnumBase:
     @classmethod
     def init_class(cls, classes_list: list):
-        cls.__init_map = {name(x): x for x in classes_list}
+        cls.factory = {name(x): x for x in classes_list}
+
+    @property
+    def get_class(self):
+        cls = self.__class__
+        return cls.factory[self.name]
 
     def make(self, **kwargs):
         cls = self.__class__
-        return cls.__init_map[self.name](**kwargs)
+        return cls.factory[self.name](**kwargs)
+
+    def get_class(self):
+        return self.__class__
 
 
 def get_deriveds(base_class: Type):
