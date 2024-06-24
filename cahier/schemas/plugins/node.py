@@ -4,11 +4,10 @@ from typing import Annotated
 
 from pydantic import Field
 
-from cahier.schemas.schemas import NodeObj
+from cahier.schemas.schemas import BaseNode
 
 ###############################################################################
 
-
-class Node(NodeObj):
+class Node(BaseNode):
 
     template: str = Field(),

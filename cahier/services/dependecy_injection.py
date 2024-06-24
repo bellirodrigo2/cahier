@@ -1,17 +1,16 @@
-""" Routers for Cahier Builder """
+""" Dependency injecion for Cahier """
 
 from functools import partial
-from typing import Tuple
 
 from cahier.database.memory_db import get_memory_db
 from cahier.repositories.memory_dict import InMemoryRepository
-from cahier.schemas.objects import ObjEnum
-from cahier.schemas.schema import Obj, WebId
 from cahier.services.asset import AssetService
 
 ###############################################################################
 # SQLALCHEMY
 ###############################################################################
+
+container = {}
 
 # db_url = "sqlite:///./sql_app.db"
 # make_session = partial(sqlalchemy_bootstrap, db_url,
@@ -26,9 +25,10 @@ from cahier.services.asset import AssetService
 ###############################################################################
 
 make_repo = partial(InMemoryRepository, get_memory_db)
-
+container['make_repo'] = make_repo
 ###############################################################################
 # Make Asset Service
 ###############################################################################
 
-get_asset_service = partial(AssetService, get_repo=make_repo)
+make_asset = partial(AssetService, get_repo=make_repo)
+container['make_asset'] = make_asset

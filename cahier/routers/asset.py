@@ -6,7 +6,7 @@ from fastapi import APIRouter, Body, Depends, Path, Query, Request
 
 from cahier.interfaces.crud import CRUDInterface, ReadAllOptions
 from cahier.schemas.schemas import ObjEnum, ListOutput, BaseInputObj, SingleOutput, WebId
-from cahier.services.dependecy_injection import get_asset_service
+from cahier.services.dependecy_injection import make_asset
 
 ###############################################################################
 
@@ -15,7 +15,7 @@ router = APIRouter(tags=[i.name for i in ObjEnum])
 
 @router.get("/{target}/{webid}", response_model=SingleOutput)
 def read_one(
-    service: CRUDInterface = Depends(get_asset_service),
+    service: CRUDInterface = Depends(make_asset),
     target: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
     selectedFields: Annotated[str | None, Query()] = None,
@@ -26,7 +26,7 @@ def read_one(
 @router.get("/{target}/{webid}/{children}")  # , response_model=SingleOutput)
 def read_all(
     request: Request,
-    service: CRUDInterface = Depends(get_asset_service),
+    service: CRUDInterface = Depends(make_asset),
     target: ObjEnum = Path(title="..."),
     children: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
@@ -65,7 +65,7 @@ def read_all(
 
 @router.post("/{target}/{webid}/{children}")
 def create_one(
-    service: CRUDInterface = Depends(get_asset_service),
+    service: CRUDInterface = Depends(make_asset),
     target: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
     children: ObjEnum = Path(title="..."),

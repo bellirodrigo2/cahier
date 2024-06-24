@@ -1,11 +1,13 @@
 from functools import partial
 from typing import Generator, Type
+import os
 
 from pydantic import BaseModel, field_validator, Field,  AliasGenerator
 from pydantic import ConfigDict, ValidationError, AnyUrl
 from pydantic.alias_generators import to_camel
 
 from cahier.schemas.webid import WebId, make_webid
+from cahier.schemas.loader import load_all_plugins
 from cahier.schemas.makeenums import make_enum, EnumBase
 
 from cahier.schemas.config import get_schema_settings
@@ -42,13 +44,13 @@ NameField = partial(Field,
         description="Name Field Description",
         min_length=settings.name_min_length,
         max_length=settings.name_max_length,
-    ),
+    )
 
 DescriptionField = partial(Field,
         description="Description Field Description",
         min_length=settings.description_min_length,
         max_length=settings.description_max_length,
-    ),
+    )
 
 WebIdField = partial(Field, 
                     description="WebId Field Description",
@@ -163,8 +165,6 @@ class BaseNode(BaseInputObj):
     def children(cls) -> list[str]:
         return ['node', 'item', 'element']
     
-    path: str = 'THIS_NODE_PATH'
-
     model_config = ObjConfig(extra='forbid')
 
 class BaseItem(BaseInputObj):
@@ -176,8 +176,6 @@ class BaseItem(BaseInputObj):
     def children(cls) -> list[str]:
         return ['item']
     
-    path: str = 'THIS_NODE_PATH'
-
     model_config = ObjConfig(extra='forbid')
     
 
@@ -190,7 +188,9 @@ class EnumBaseInputObj(EnumBase):
     @property
     def children(self):
         return self._get_class.children() 
-    
+
+load_all_plugins(os.path.dirname(__file__), "plugins")
+
 ObjEnum: Type[EnumBaseInputObj] = make_enum(BaseInputObj, EnumBaseInputObj)
     
 def is_valid_parent(parent: EnumBaseInputObj, child: EnumBaseInputObj):
