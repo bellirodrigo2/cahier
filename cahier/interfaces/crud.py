@@ -11,8 +11,8 @@ from cahier.schemas.schemas import BaseOutput, ListOutput, BaseInputObj
 ################################################################################
 
 class SortOrder(Enum):
-    Asc = 'Asc'
-    Desc = 'Desc'
+    Asc = 'asc'
+    Desc = 'desc'
 
 class ReadAllOptions(BaseModel):
     """"""
@@ -30,14 +30,14 @@ class ReadAllOptions(BaseModel):
             )
 
 
-    field_filter: list[str] | None = Field()
-    field_filter_like: list[str] | None = Field()
-    search_full_hierarchy: bool | None = Field()
-    sort_field: str | None = Field()
-    sort_order: SortOrder | None = Field()
-    start_index: int | None = Field()
-    max_count: int | None = Field()
-    selected_fields: list[str] | None = Field()
+    field_filter: list[str] | None = Field(default=None)
+    field_filter_like: list[str] | None = Field(default=None)
+    search_full_hierarchy: bool | None = Field(default=None)
+    sort_field: str | None = Field(default=None)
+    sort_order: SortOrder | None = Field(default=None)
+    start_index: int | None = Field(default=None)
+    max_count: int | None = Field(default=None)
+    selected_fields: list[str] | None = Field(default=None)
 
 class CRUDInterface(Protocol):
 

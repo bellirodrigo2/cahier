@@ -1,15 +1,16 @@
 ############################################################################################
 $$$$ NEXT STEP: onjinput, obj, objupdate, objputput
 
-#FAZER OS ITEMS DE ATTRIBUTE NO MESMO NIVEL DO OBJ.... COM EXTRA=True e inheritance
-testarrrr muuito
+# fazer dependencia de WEBID....injetar dependencia
+FAZER OS QUERY PARAMS COM CAMELCASE
+testar todos os alias_generator to_camel
+SORT_ORDER do READALLOPTIONS tem que levar pra lower() no field_validation
 
 ##############################################
 NO FILE schemas
-# USAR ALIAS GENERATOR PARA CAMELCASE... ALIAS E VALIDATION_ALIAS    
-    # https://docs.pydantic.dev/2.0/api/alias_generators/
-    #ESTUDATR COMO EXTENDER MODELOS COM BASECLASS E VALIDAR PARA DERIVED EM SEGUNDO NIVEL
-    # PRIMEIRO NIVEL, FASTAPI CHECA BASECLASS E API LAYER CHECK IF DERIVED CLASS IS VALID
+
+COMO FAZER OBJINPUT E BaseObj, mudando apenas os default e default_factory ????
+metadata ????
 
 fazer prototipo de node mais rapido...com item somente key : value (name, type)
 

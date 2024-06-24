@@ -6,7 +6,7 @@ from cahier.interfaces.crud import CRUDInterface, ReadAllOptions
 # from cahier.schemas.schema import (ListOutput, Obj, ObjInput, SingleOutput,
                                     # WebId)
 
-from cahier.schemas.schemas import ObjEnum, WebId, is_valid_parent
+from cahier.schemas.schemas import ObjEnum, WebId, is_valid_parent, BaseObj
 from cahier.schemas.schemas import SingleOutput, ListOutput, BaseOutput, BaseInputObj
 
 ###############################################################################
@@ -19,7 +19,7 @@ class AssetServiceError(Exception):
     pass
 
 def check_hierarchy(parent: ObjEnum, children: ObjEnum):
-    if is_valid_parent(parent, children)
+    if is_valid_parent(parent, children) is False:
         err = f"Object type {parent=} can not has a child of type {children}"
         raise AssetServiceError(err)
 
@@ -33,17 +33,17 @@ class AssetService:
     ) -> None:
         self.__get_repo = get_repo
 
-    def _add_one(self, webid: WebId, obj: ObjInput) -> None:
+    def _add_one(self, webid: WebId, obj: BaseInputObj) -> None:
         repo: CRUDInterface = self.__get_repo()
-        repo.add_one(webid=webid, obj=obj)
+        repo.create(webid=webid, obj=obj)
 
-    def _get_one(self, webid: WebId) -> Obj:
+    def _get_one(self, webid: WebId) -> BaseOutput:
         repo: CRUDInterface = self.__get_repo()
-        return repo.get_one_by_webid(webid=webid)
+        return repo.read(webid=webid)
 
     def _get_all(
         self, webid: WebId, child: ObjEnum, query_opt: ReadAllOptions
-    ) -> list[Obj]:
+    ) -> list[BaseObj]:
         repo: CRUDInterface = self.__get_repo()
         return repo.get_all_by_parent_webid(
             webid=webid, child=child, query_opt=query_opt

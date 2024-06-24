@@ -54,7 +54,6 @@ DescriptionField = partial(Field,
 
 WebIdField = partial(Field, 
                     description="WebId Field Description",
-                    default_factory=make_webid
                     )
 
 ClientIdField = partial(Field, 
@@ -62,19 +61,6 @@ ClientIdField = partial(Field,
                     min_length=settings.clientid_min_length,
                     max_length=settings.clientid_max_length,
                     )
-
-# webid eh criado qdo objinput ->obj.... mas qdo DB -> Obj, nap...ai é obrigatorio
-    # compensa fazer webid obrigatorio e deixar o make_webid em uma factory ?
-    # fazer dependencia de WEBID....injetar dependencia
-# OBJ = OBJINPUT + WEBID..... TODOS OS FIELD SAO OPCIONAIS MAS TEM DEFAULT_FACTORY
-# OBJUPDATE  TODOS OS FIELD SAO OPCIONAIS, NAO TEM DEFAULT
-# SINGLEOUTPUT, IDEM OBJUPDATE + WEBID
-
-# fazer- obj de baseclass....com extra para classes derivadas... mas depois nao pode mais ter extra...
-# nas classes derivadas, da pra override o ConfigDict ???
-# testar se mandar mais fields para AF...tipo {Name: zzz, Description:deddw, NonexistantField:foobar}
-# testar dois niveis de cast.... para baseclass objinput por exemplo... e em um segundo nivel... classe derivada
-# 
 
 KeywordsField = partial(Field,
         description=''
@@ -99,19 +85,19 @@ class BaseInputObj(BaseModel):
     keywords: list[str] | None = KeywordsField(default=[])
 
 class BaseObj(BaseInputObj):
-    webid: WebId = WebIdField()
+    webid: WebId = WebIdField(default_factory=make_webid)
 
 class BaseUpdate(BaseModel):
     model_config = ObjConfig(extra='allow')
     
     name: str | None = NameField(default=None)
     description: str | None = DescriptionField(default=None)
+    client_id: str | None = ClientIdField(default=None)
     keywords: list[str] | None = KeywordsField(default=None)
     
 class BaseOutput(BaseUpdate):
     
-    client_id: str | None = ClientIdField()
-    webid: WebId | None = WebIdField()
+    webid: WebId | None = WebIdField(default=None)
 
 class hasLinks:
     links: list[AnyUrl] = Field()

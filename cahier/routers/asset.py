@@ -31,31 +31,27 @@ def read_all(
     children: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
     # https://stackoverflow.com/questions/62279710/fastapi-variable-query-parameters
-    fieldFilter: Annotated[list[str] | None, Query(...)] = None,
-    fieldFilterLike: Annotated[list[str] | None, Query(...)] = None,
-    searchFullHierarchy: Annotated[bool | None, Query(...)] = None,
-    sortField: Annotated[str | None, Query(...)] = None,
-    sortOrder: Annotated[str | None, Query(...)] = None,
-    startIndex: Annotated[int | None, Query(...)] = None,
-    maxCount: Annotated[int | None, Query(...)] = None,
-    selectedFields: Annotated[str | None, Query(...)] = None,
+    field_filter: Annotated[list[str] | None, Query(...)] = None,
+    field_filter_like: Annotated[list[str] | None, Query(...)] = None,
+    search_full_hierarchy: Annotated[bool | None, Query(...)] = None,
+    sort_field: Annotated[str | None, Query(...)] = None,
+    sort_order: Annotated[str | None, Query(...)] = None,
+    start_index: Annotated[int | None, Query(...)] = None,
+    max_count: Annotated[int | None, Query(...)] = None,
+    selected_fields: Annotated[list[str] | None, Query(...)] = None,
 ):
 
     queries = dict(request.query_params)
 
-    if "fieldFilterLike" in queries:
-        queries["fieldFilterLike"] = fieldFilterLike
+    if "field_filter" in queries:
+        queries["field_filter"] = field_filter
+        
+    if "field_filter_like" in queries:
+        queries["field_filter_like"] = field_filter_like
 
-    if "fieldFilter" in queries:
-        queries["fieldFilter"] = fieldFilter
 
-    if "selectedFields" in queries:
-        queries["selectedFields"] = selectedFields
-
-    # set HEADERS for pagination
-    # total objects ????  teria que saber i numero total de items
-    # from
-    # to
+    if "selected_fields" in queries:
+        queries["selected_fields"] = selected_fields
 
     return service.list(
         parent=target, children=children, webid=webid, 
