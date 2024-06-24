@@ -8,6 +8,7 @@ from cahier.schemas.schemas import BaseNode
 
 ###############################################################################
 
+
 class Node(BaseNode):
 
-    template: str = Field(),
+    template: str = (Field(),)

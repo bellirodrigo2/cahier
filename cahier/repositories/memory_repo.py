@@ -1,13 +1,15 @@
 """ In Memory Repository """
+
 from typing import Callable
 
 from treelib import Tree
 
 from cahier.interfaces.crud import ReadAllOptions
-from cahier.schemas.schemas import WebId
-from cahier.schemas.schemas import ObjEnum, BaseOutput, BaseInputObj, ListOutput, BaseObj
+from cahier.schemas.schemas import (BaseInputObj, BaseObj, BaseOutput,
+                                    ListOutput, ObjEnum, WebId)
 
 ################################################################################
+
 
 class InMemoryRepository:
 
@@ -22,20 +24,26 @@ class InMemoryRepository:
             # checar se type do node = target_type
             return node.data
         raise Exception()
-    
-    def list(self, parent: ObjEnum, children: ObjEnum, webid: WebId, 
-            query_dict: ReadAllOptions) -> list[BaseOutput] | ListOutput:
+
+    def list(
+        self,
+        parent: ObjEnum,
+        children: ObjEnum,
+        webid: WebId,
+        query_dict: ReadAllOptions,
+    ) -> list[BaseOutput] | ListOutput:
         """"""
         tree = self.get_db()
         node = tree.get_node(webid)
         if node:
             # checar se type do node = target_type
-            return node.children #... filtrar os types de children
+            return node.children  # ... filtrar os types de children
 
-    def create(self, parent: ObjEnum, children: ObjEnum, webid: WebId, 
-               obj: BaseInputObj) -> None:
+    def create(
+        self, parent: ObjEnum, children: ObjEnum, webid: WebId, obj: BaseInputObj
+    ) -> None:
         """"""
-        
+
         tree = self.get_db()
         obj_ = BaseObj(obj)
         tree.create_node(tag=obj_.name, identifier=obj_.webid, data=obj_)

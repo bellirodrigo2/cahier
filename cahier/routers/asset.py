@@ -5,7 +5,8 @@ from typing import Annotated
 from fastapi import APIRouter, Body, Depends, Path, Query, Request
 
 from cahier.interfaces.crud import CRUDInterface, ReadAllOptions
-from cahier.schemas.schemas import ObjEnum, ListOutput, BaseInputObj, SingleOutput, WebId
+from cahier.schemas.schemas import (BaseInputObj, ListOutput, ObjEnum,
+                                    SingleOutput, WebId)
 from cahier.services.dependecy_injection import make_asset
 
 ###############################################################################
@@ -45,17 +46,18 @@ def read_all(
 
     if "field_filter" in queries:
         queries["field_filter"] = field_filter
-        
+
     if "field_filter_like" in queries:
         queries["field_filter_like"] = field_filter_like
-
 
     if "selected_fields" in queries:
         queries["selected_fields"] = selected_fields
 
     return service.list(
-        parent=target, children=children, webid=webid, 
-        query_dict=ReadAllOptions(**queries)
+        parent=target,
+        children=children,
+        webid=webid,
+        query_dict=ReadAllOptions(**queries),
     )
 
 
@@ -65,7 +67,9 @@ def create_one(
     target: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
     children: ObjEnum = Path(title="..."),
-    obj: BaseInputObj = Body(title="Node JSON object to be added to the provided webid"),
+    obj: BaseInputObj = Body(
+        title="Node JSON object to be added to the provided webid"
+    ),
 ):
     service.create(parent=target, webid=webid, children=children, obj=obj)
     # set header

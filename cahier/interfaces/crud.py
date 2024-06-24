@@ -1,34 +1,35 @@
 """"""
-from typing import Any, Protocol
-from enum import Enum
 
-from pydantic import BaseModel, ConfigDict, AliasGenerator, Field
+from enum import Enum
+from typing import Any, Protocol
+
+from pydantic import AliasGenerator, BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
-from cahier.schemas.schemas import ObjEnum, WebId
-from cahier.schemas.schemas import BaseOutput, ListOutput, BaseInputObj
+from cahier.schemas.schemas import (BaseInputObj, BaseOutput, ListOutput,
+                                    ObjEnum, WebId)
 
 ################################################################################
 
+
 class SortOrder(Enum):
-    Asc = 'asc'
-    Desc = 'desc'
+    Asc = "asc"
+    Desc = "desc"
+
 
 class ReadAllOptions(BaseModel):
     """"""
-    model_config = ConfigDict(
-                alias_generator=AliasGenerator(
-                    alias=to_camel,
-                    validation_alias=to_camel,
-                    serialization_alias=to_camel
-                ),
-                populate_by_name=True,
-                use_enum_values=True,
-                frozen=True,
-                str_strip_whitespace=True,
-                extra='forbid'
-            )
 
+    model_config = ConfigDict(
+        alias_generator=AliasGenerator(
+            alias=to_camel, validation_alias=to_camel, serialization_alias=to_camel
+        ),
+        populate_by_name=True,
+        use_enum_values=True,
+        frozen=True,
+        str_strip_whitespace=True,
+        extra="forbid",
+    )
 
     field_filter: list[str] | None = Field(default=None)
     field_filter_like: list[str] | None = Field(default=None)
@@ -39,18 +40,25 @@ class ReadAllOptions(BaseModel):
     max_count: int | None = Field(default=None)
     selected_fields: list[str] | None = Field(default=None)
 
+
 class CRUDInterface(Protocol):
 
     def read(self, webid: WebId, target_type: ObjEnum) -> BaseOutput:
         """"""
         pass
 
-    def list(self, parent: ObjEnum, children: ObjEnum, webid: WebId, 
-            query_dict: ReadAllOptions) -> list[BaseOutput] | ListOutput:
+    def list(
+        self,
+        parent: ObjEnum,
+        children: ObjEnum,
+        webid: WebId,
+        query_dict: ReadAllOptions,
+    ) -> list[BaseOutput] | ListOutput:
         """"""
         pass
 
-    def create(self, parent: ObjEnum, children: ObjEnum, webid: WebId, 
-               obj: BaseInputObj) -> None:
+    def create(
+        self, parent: ObjEnum, children: ObjEnum, webid: WebId, obj: BaseInputObj
+    ) -> None:
         """"""
         pass

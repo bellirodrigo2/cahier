@@ -11,4 +11,4 @@ from cahier.schemas.schemas import BaseRoot
 
 class DataBase(BaseRoot):
 
-    host:str = Field(),
+    host: str = (Field(),)

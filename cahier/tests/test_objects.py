@@ -6,8 +6,10 @@ from cahier.schemas.schemas import ObjEnum, is_valid_parent
 
 ###############################################################################
 
+
 def obj_type(x):
     return x.__class__.__name__.lower()
+
 
 def test_enums():
     ObjEnum.assetserver
@@ -79,6 +81,7 @@ def test_factories_database_hierarchy():
     assert is_valid_parent(ObjEnum.database, ObjEnum.node)
     assert is_valid_parent(ObjEnum.database, ObjEnum.item) is False
 
+
 def test_factories_view_hierarchy():
     assert is_valid_parent(ObjEnum.view, ObjEnum.assetserver) is False
     assert is_valid_parent(ObjEnum.view, ObjEnum.database) is False
@@ -86,12 +89,14 @@ def test_factories_view_hierarchy():
     assert is_valid_parent(ObjEnum.view, ObjEnum.node) is False
     assert is_valid_parent(ObjEnum.view, ObjEnum.item) is False
 
+
 def test_factories_node_hierarchy():
     assert is_valid_parent(ObjEnum.node, ObjEnum.assetserver) is False
     assert is_valid_parent(ObjEnum.node, ObjEnum.database) is False
     assert is_valid_parent(ObjEnum.node, ObjEnum.view)
     assert is_valid_parent(ObjEnum.node, ObjEnum.node)
     assert is_valid_parent(ObjEnum.node, ObjEnum.item)
+
 
 def test_factories_item_hierarchy():
     assert is_valid_parent(ObjEnum.item, ObjEnum.assetserver) is False

@@ -11,4 +11,4 @@ from cahier.schemas.schemas import BaseElement
 
 class View(BaseElement):
 
-    view_str: str =Field(),
+    view_str: str = (Field(),)

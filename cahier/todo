@@ -1,13 +1,20 @@
 ############################################################################################
-$$$$ NEXT STEP: onjinput, obj, objupdate, objputput
 
-# fazer dependencia de WEBID....injetar dependencia
+REPONSE_MODEL....ESTA RETORNANDO VAZIO POR ENQTO PQ ESTA TODOS = NONE ????????????
+TESTAR AF>..  E SE TIVER VAZIO ???
+    se colocar no selectedFilters que nao existe, apenas ignora...e volta json vazio
+    SE BODY DE POST TIVER COISA A MAIS ???
+    
+E SE O SELECT_FIELD TIVER FIELD QUE NAO EXISTE ??? E SE ESTIVER VAZIO ???
+
+ID DE MONGO + INFO DE OBJ TYPE
 FAZER OS QUERY PARAMS COM CAMELCASE
 testar todos os alias_generator to_camel
 SORT_ORDER do READALLOPTIONS tem que levar pra lower() no field_validation
 
 ##############################################
 NO FILE schemas
+# fazer dependencia de WEBID....injetar dependencia
 
 COMO FAZER OBJINPUT E BaseObj, mudando apenas os default e default_factory ????
 metadata ????

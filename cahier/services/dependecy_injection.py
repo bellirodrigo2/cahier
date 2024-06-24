@@ -25,10 +25,10 @@ container = {}
 ###############################################################################
 
 make_repo = partial(InMemoryRepository, get_memory_db)
-container['make_repo'] = make_repo
+container["make_repo"] = make_repo
 ###############################################################################
 # Make Asset Service
 ###############################################################################
 
 make_asset = partial(AssetService, get_repo=make_repo)
-container['make_asset'] = make_asset
+container["make_asset"] = make_asset
