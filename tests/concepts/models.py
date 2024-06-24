@@ -36,6 +36,13 @@ ObjConfig = partial(ConfigDict,
                 # extra='allow'
             )
 
+def make_field(**kwargs):
+    return Field(
+        description="Name Field Description",
+        min_length=2,
+        max_length=64,
+        **kwargs
+    )
 NameField = partial(Field,
         description="Name Field Description",
         min_length=2,
@@ -58,7 +65,7 @@ class BaseObj(BaseModel, ABC):
     model_config = ObjConfig(extra='allow') #to allow derived class casting
 
     name: str | None = NameField(default_factory=lambda: next(name_gen))
-    id: str | None = NameField(default='_ID_')
+    id: str | None = make_field(default='_ID_')
 
 class BaseRoot(BaseObj):
     @classmethod
