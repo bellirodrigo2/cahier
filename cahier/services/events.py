@@ -2,7 +2,7 @@
 
 from typing import Callable
 
-from cahier.interfaces.events import EventHandlerError
+from old.events import EventHandlerError
 
 ###############################################################################
 

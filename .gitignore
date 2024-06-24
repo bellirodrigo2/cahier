@@ -20,4 +20,6 @@ dmypy.json
 .vscode/
 
 #quick tests
-testingo.py
+**/testingo.py
+
+old/
