@@ -3,7 +3,7 @@
 from typing import Callable
 
 from cahier.database.memory_db import ObjMemoryInterface, make_obj
-from cahier.schemas.schemas import Obj, WebId
+from cahier.schemas.schema import Obj, WebId
 
 ################################################################################
 

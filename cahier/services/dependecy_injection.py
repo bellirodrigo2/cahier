@@ -6,7 +6,7 @@ from typing import Tuple
 from cahier.database.memory_db import get_memory_db
 from cahier.repositories.memory_dict import InMemoryRepository
 from cahier.schemas.objects import ObjEnum
-from cahier.schemas.schemas import Obj, WebId
+from cahier.schemas.schema import Obj, WebId
 from cahier.services.asset import AssetService
 
 ###############################################################################

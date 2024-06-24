@@ -5,7 +5,7 @@ from typing import Callable
 from sqlalchemy.orm import DeclarativeBase
 
 from cahier.database.sqlalchemy_db import DbType
-from cahier.schemas.schemas import Obj, WebId
+from cahier.schemas.schema import Obj, WebId
 
 ################################################################################
 

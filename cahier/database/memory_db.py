@@ -2,7 +2,7 @@
 
 from typing import Protocol
 
-from cahier.schemas.schemas import Obj, WebId
+from cahier.schemas.schema import Obj, WebId
 
 ################################################################################
 

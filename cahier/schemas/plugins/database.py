@@ -4,18 +4,11 @@ from typing import Annotated
 
 from pydantic import Field
 
-from cahier.schemas.base_objects import RootObj
+from cahier.schemas.schemas import BaseRoot
 
 ###############################################################################
 
 
-class DataBase(RootObj):
+class DataBase(BaseRoot):
 
-    db_field: Annotated[
-        str,
-        Field(
-            alias="DBField",
-            serialization_alias="DBField",
-            # default=''
-        ),
-    ]
+    host:str = Field(),

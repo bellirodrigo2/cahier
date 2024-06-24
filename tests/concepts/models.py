@@ -1,9 +1,10 @@
-from abc import ABC, abstractmethod
 from functools import partial
 from typing import Generator
 
-from pydantic import BaseModel, field_validator, Field,  AliasGenerator, ConfigDict
+from pydantic import BaseModel, field_validator, Field,  AliasGenerator, ConfigDict, ValidationError
 from pydantic.alias_generators import to_camel
+
+from cahier.schemas.makeenums import make_enum, EnumBase
 
 ##############################################################################
 SPECIAL_CHARS = ['*', '?', ';', '{', '}', '[', ']', '|', '\\', '`', ''', ''', ':']
@@ -36,45 +37,40 @@ ObjConfig = partial(ConfigDict,
                 # extra='allow'
             )
 
-def make_field(**kwargs):
-    return Field(
-        description="Name Field Description",
-        min_length=2,
-        max_length=64,
-        **kwargs
-    )
 NameField = partial(Field,
         description="Name Field Description",
-        min_length=2,
+        min_length=3,
         max_length=64,
         # default_factory=lambda: next(name_gen),
-    ),
+    )
+IdField = partial(Field,
+        description="Id Field Description",
+        min_length=16,
+        max_length=16,
+        # default_factory=lambda: next(name_gen),
+    )
 
-class BaseObj(BaseModel, ABC):
+class BaseObj(BaseModel):
     
     @classmethod
-    @abstractmethod
     def base_type(cls) -> str:
-        pass
+        return 'base'
 
     @classmethod
-    @abstractmethod
     def children(cls) -> list[str]:
-        pass
+        return []
 
     model_config = ObjConfig(extra='allow') #to allow derived class casting
 
     name: str | None = NameField(default_factory=lambda: next(name_gen))
-    id: str | None = make_field(default='_ID_')
+    id: str | None = IdField(default='_ID_')
 
 class BaseRoot(BaseObj):
     @classmethod
-    @abstractmethod
     def base_type(cls) -> str:
         return 'root'
 
     @classmethod
-    @abstractmethod
     def children(cls) -> list[str]:
         return ['element', 'node']
 
@@ -82,12 +78,10 @@ class BaseRoot(BaseObj):
 
 class BaseElement(BaseObj):
     @classmethod
-    @abstractmethod
     def base_type(cls) -> str:
         return 'element'
 
     @classmethod
-    @abstractmethod
     def children(cls) -> list[str]:
         return []
 
@@ -95,26 +89,21 @@ class BaseElement(BaseObj):
     
 class BaseNode(BaseObj):
     @classmethod
-    @abstractmethod
     def base_type(cls) -> str:
         return 'node'
 
     @classmethod
-    @abstractmethod
     def children(cls) -> list[str]:
         return ['node', 'item']
 
     model_config = ObjConfig(extra='forbid')
 
-    
 class BaseItem(BaseObj):
     @classmethod
-    @abstractmethod
     def base_type(cls) -> str:
         return 'item'
 
     @classmethod
-    @abstractmethod
     def children(cls) -> list[str]:
         return ['item']
 
@@ -135,12 +124,66 @@ class TemplateNode(BaseNode):
     pass
 
 class Node(BaseNode):
-    pass
+    nodeattr1: str
+    nodeattr2: str
 
 class Item(BaseItem):
-    pass
+    itemattr: str
 
 if __name__ == '__main__':
-    print('OK')
-#RECEBER DICT
-#VALIDAR 
+    print('Starting Tests')
+
+    input = {
+        'name': 'RBELLI',
+        'id': '1234567890123456',
+        'nodeattr1': 'field1node',
+        'nodeattr2': 'field1node',
+    }
+    base = BaseObj(**input)
+    node = Node(**base.model_dump())
+
+    try:
+        item = Item(**base.model_dump())
+    except ValidationError as e:
+        print('A Node cannot be casted to an Item')
+        # print(e.json())
+    try:
+        input2 = dict(input)
+        input2['extraattr'] = True
+        base2 = BaseObj(**input2)
+        node2 = Node(**base2.model_dump())
+    except ValidationError as e:
+        print('A Node can´t have extra fields')
+        # print(e.json())
+        
+    class objEnum(EnumBase):
+        @property
+        def base_type(self):
+            return self._get_class.base_type()
+        @property
+        def children(self):
+            return self._get_class.children() 
+    
+    enum = make_enum(BaseObj, objEnum)
+    
+    e1: objEnum = enum.node
+    print(e1.base_type)
+    print(e1.children)
+    node3 = e1.make(**base.model_dump())
+    
+    e2: objEnum = enum.item
+    print(e2.base_type)
+    print(e2.children)
+    try:
+        node4 = e2.make(**base.model_dump())
+    except ValidationError as e:
+        print('A Node cannot be casted to an Item')
+        # print(e.json())
+    
+    attr = {
+        'name': 'RBELLI',
+        'id': '1234567890123456',
+        'itemattr': 'field1node',
+    }
+    basei = BaseObj(**attr)
+    node5 = e2.make(**basei.model_dump())

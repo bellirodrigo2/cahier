@@ -5,7 +5,7 @@ from typing import Annotated
 
 from pydantic import Field
 
-from cahier.schemas.base_objects import ItemObj
+from cahier.schemas.schemas import BaseItem
 from cahier.schemas.timestamp import Timestamp
 
 ###############################################################################
@@ -20,14 +20,6 @@ class DataTypeEnum(Enum):
     timestamp = Timestamp
 
 
-class Item(ItemObj):
+class Item(BaseItem):
 
-    # path: pathField
-
-    data_source: Annotated[
-        str,
-        Field(
-            alias="DataSource",
-            serialization_alias="DataSource",
-        ),
-    ]
+    type: DataTypeEnum =Field(),
