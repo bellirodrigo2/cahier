@@ -64,41 +64,38 @@ def test_factories_item():
     assert m.type == arg
 
 
-# def test_factories_assetserver_hierarchy():
-#     assert ObjEnum.assetserver.parent_of(ObjEnum.database)
-#     assert ObjEnum.assetserver.parent_of(ObjEnum.view) is False
-#     assert ObjEnum.assetserver.parent_of(ObjEnum.node) is False
-#     assert ObjEnum.assetserver.parent_of(ObjEnum.item) is False
-#     assert ObjEnum.assetserver.parent_of(ObjEnum.assetserver) is False
+def test_factories_assetserver_hierarchy():
+    assert is_valid_parent(ObjEnum.assetserver, ObjEnum.database)
+    assert is_valid_parent(ObjEnum.assetserver, ObjEnum.view) is False
+    assert is_valid_parent(ObjEnum.assetserver, ObjEnum.node) is False
+    assert is_valid_parent(ObjEnum.assetserver, ObjEnum.item) is False
+    assert is_valid_parent(ObjEnum.assetserver, ObjEnum.assetserver) is False
 
 
-# def test_factories_database_hierarchy():
-#     assert ObjEnum.database.parent_of(ObjEnum.assetserver) is False
-#     assert ObjEnum.database.parent_of(ObjEnum.database) is False
-#     assert ObjEnum.database.parent_of(ObjEnum.view)
-#     assert ObjEnum.database.parent_of(ObjEnum.node)
-#     assert ObjEnum.database.parent_of(ObjEnum.item) is False
+def test_factories_database_hierarchy():
+    assert is_valid_parent(ObjEnum.database, ObjEnum.assetserver) is False
+    assert is_valid_parent(ObjEnum.database, ObjEnum.database) is False
+    assert is_valid_parent(ObjEnum.database, ObjEnum.view)
+    assert is_valid_parent(ObjEnum.database, ObjEnum.node)
+    assert is_valid_parent(ObjEnum.database, ObjEnum.item) is False
 
+def test_factories_view_hierarchy():
+    assert is_valid_parent(ObjEnum.view, ObjEnum.assetserver) is False
+    assert is_valid_parent(ObjEnum.view, ObjEnum.database) is False
+    assert is_valid_parent(ObjEnum.view, ObjEnum.view) is False
+    assert is_valid_parent(ObjEnum.view, ObjEnum.node) is False
+    assert is_valid_parent(ObjEnum.view, ObjEnum.item) is False
 
-# def test_factories_view_hierarchy():
-#     assert ObjEnum.view.parent_of(ObjEnum.assetserver) is False
-#     assert ObjEnum.view.parent_of(ObjEnum.database) is False
-#     assert ObjEnum.view.parent_of(ObjEnum.view) is False
-#     assert ObjEnum.view.parent_of(ObjEnum.node) is False
-#     assert ObjEnum.view.parent_of(ObjEnum.item) is False
+def test_factories_node_hierarchy():
+    assert is_valid_parent(ObjEnum.node, ObjEnum.assetserver) is False
+    assert is_valid_parent(ObjEnum.node, ObjEnum.database) is False
+    assert is_valid_parent(ObjEnum.node, ObjEnum.view)
+    assert is_valid_parent(ObjEnum.node, ObjEnum.node)
+    assert is_valid_parent(ObjEnum.node, ObjEnum.item)
 
-
-# def test_factories_node_hierarchy():
-#     assert ObjEnum.node.parent_of(ObjEnum.assetserver) is False
-#     assert ObjEnum.node.parent_of(ObjEnum.database) is False
-#     assert ObjEnum.node.parent_of(ObjEnum.view) is False
-#     assert ObjEnum.node.parent_of(ObjEnum.node)
-#     assert ObjEnum.node.parent_of(ObjEnum.item)
-
-
-# def test_factories_item_hierarchy():
-#     assert ObjEnum.item.parent_of(ObjEnum.assetserver) is False
-#     assert ObjEnum.item.parent_of(ObjEnum.database) is False
-#     assert ObjEnum.item.parent_of(ObjEnum.view) is False
-#     assert ObjEnum.item.parent_of(ObjEnum.node) is False
-#     assert ObjEnum.item.parent_of(ObjEnum.item)
+def test_factories_item_hierarchy():
+    assert is_valid_parent(ObjEnum.item, ObjEnum.assetserver) is False
+    assert is_valid_parent(ObjEnum.item, ObjEnum.database) is False
+    assert is_valid_parent(ObjEnum.item, ObjEnum.view) is False
+    assert is_valid_parent(ObjEnum.item, ObjEnum.node) is False
+    assert is_valid_parent(ObjEnum.item, ObjEnum.item)
