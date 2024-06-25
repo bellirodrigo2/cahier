@@ -23,16 +23,16 @@ def bootstrap(filename: str, **kwargs):
 def get_memory_db(tree: Tree)->Generator[Tree, Any, None]:
     """ """
     
-    print('here')
-    
     try:
         yield tree #PROBLEMA.... tree_session é uma tree aqui e um tree_session no close
     finally:
-        tree.save2file(tree.identifier)
+        print(tree.to_json())
+        tree.save2file(f'{tree.identifier}')
 
 if __name__ == '__main__':
     
     tree = bootstrap('hello.json')
     
-    db = get_memory_db(tree)
-    
+    with get_memory_db(tree) as db:
+        one = db.create_node(tag='one')
+        db.create_node(tag='two', parent=one)
