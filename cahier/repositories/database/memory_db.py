@@ -1,48 +1,38 @@
 """ In Memory Database """
-from typing import Any
+from typing import Any, Generator, Callable
 from enum import Enum
+# from functools import partial
+from contextlib import contextmanager
 
 from pydantic import BaseModel
 from treelib import Tree
 
-from cahier.schemas.webid import WebId
+from cahier.schemas.schemas import WebId, ObjEnum, InputObj
 
 ################################################################################
 
-class Ops(Enum):
-    Create = 'create'
-    Update = 'update'
-    Patch = 'patch'
-    Delete = 'delete'
-
-class TreeOperation(BaseModel):
+def bootstrap(filename: str, **kwargs):
     
-    operation: Ops
-    target_webid: WebId
-    value: dict[str, Any]
+    tree = Tree(identifier=filename)
 
-class TreeSession:
+    #inicializa aqui do file json
     
-    def __init__(self, filename: str) -> None:
-        # carregar a tree do file aqui
-        self.__tree = Tree()
-    
-    def __call__(self):
-        return self.__tree
-    
-    def close(self):
-        # persist data here
-        pass
-    
+    return tree
 
-
-def bootstrap(filename: str, **kwargs)->TreeSession:
-    return TreeSession(filename=filename)
-
-
-def get_memory_db(tree_session: TreeSession):
+@contextmanager
+def get_memory_db(tree: Tree)->Generator[Tree, Any, None]:
     """ """
+    
+    print('here')
+    
     try:
-        yield tree_session
+        yield tree #PROBLEMA.... tree_session é uma tree aqui e um tree_session no close
     finally:
-        tree_session.close()
+        tree.save2file(tree.identifier)
+
+if __name__ == '__main__':
+    
+    tree = bootstrap('hello.json')
+    
+    db = get_memory_db(tree)
+    
