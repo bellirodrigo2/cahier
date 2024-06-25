@@ -4,9 +4,8 @@ from typing import Callable
 
 from treelib import Tree
 
-from cahier.interfaces.crud import ReadAllOptions
-from cahier.schemas.schemas import (BaseInputObj, BaseObj, BaseOutput,
-                                    ListOutput, ObjEnum, WebId)
+from cahier.interfaces.crud import ReadOptions, JsonReponse
+from cahier.schemas.schemas import InputObj, Obj, ObjEnum, WebId
 
 ################################################################################
 
@@ -16,7 +15,9 @@ class InMemoryRepository:
     def __init__(self, get_db: Callable[[], Tree]) -> None:
         self.get_db = get_db
 
-    def read(self, webid: WebId, target_type: ObjEnum) -> BaseOutput:
+    def read(self, 
+             webid: WebId, target_type: ObjEnum, options, ReadOptions
+            ) -> JsonReponse:
 
         tree = self.get_db()
         node = tree.get_node(webid)
@@ -30,20 +31,20 @@ class InMemoryRepository:
         parent: ObjEnum,
         children: ObjEnum,
         webid: WebId,
-        query_dict: ReadAllOptions,
-    ) -> list[BaseOutput] | ListOutput:
+        options: ReadOptions,
+    ) -> list[JsonReponse] | JsonReponse:
+
         """"""
         tree = self.get_db()
         node = tree.get_node(webid)
         if node:
             # checar se type do node = target_type
             return node.children  # ... filtrar os types de children
-
     def create(
-        self, parent: ObjEnum, children: ObjEnum, webid: WebId, obj: BaseInputObj
+        self, parent: ObjEnum, children: ObjEnum, webid: WebId, obj: InputObj
     ) -> None:
         """"""
 
         tree = self.get_db()
-        obj_ = BaseObj(obj)
+        obj_ = Obj(obj)
         tree.create_node(tag=obj_.name, identifier=obj_.webid, data=obj_)

@@ -1,12 +1,14 @@
 ############################################################################################
 
-REPONSE_MODEL....ESTA RETORNANDO VAZIO POR ENQTO PQ ESTA TODOS = NONE ????????????
+que camada fica filter(selected_fields) ???? e addlink ????
+
+add /v1/
 TESTAR AF>..  E SE TIVER VAZIO ???
     se colocar no selectedFilters que nao existe, apenas ignora...e volta json vazio
     SE body em post(body) tiver field que nao existe da ERRO
     se body em post(body) vazio OKK, nao da erro
 
-E SE O SELECT_FIELD TIVER FIELD QUE NAO EXISTE ??? E SE ESTIVER VAZIO ???
+em code/af esta instalado pymongo pra estudar objectid
 
 ID DE MONGO + INFO DE OBJ TYPE
 FAZER OS QUERY PARAMS COM CAMELCASE

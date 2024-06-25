@@ -73,7 +73,7 @@ KeywordsField = partial(
 )
 
 
-class BaseInputObj(BaseModel):
+class InputObj(BaseModel):
 
     @classmethod
     def base_type(cls) -> str:
@@ -91,11 +91,11 @@ class BaseInputObj(BaseModel):
     keywords: list[str] | None = KeywordsField(default=[])
 
 
-class BaseObj(BaseInputObj):
+class Obj(InputObj):
     webid: WebId = WebIdField(default_factory=make_webid)
 
 
-class BaseUpdate(BaseModel):
+class UpdateObj(BaseModel):
     model_config = ObjConfig(extra="allow")
 
     name: str | None = NameField(default=None)
@@ -104,25 +104,24 @@ class BaseUpdate(BaseModel):
     keywords: list[str] | None = KeywordsField(default=None)
 
 
-class BaseOutput(BaseUpdate):
-
-    webid: WebId | None = WebIdField(default=None)
-
-
-class hasLinks:
-    links: list[AnyUrl] = Field()
+# class BaseOutput(BaseUpdate):
+    # webid: WebId | None = WebIdField(default=None)
 
 
-class SingleOutput(BaseOutput, hasLinks):
-    pass
+# class hasLinks:
+#     links: list[AnyUrl] = Field()
 
 
-class ListOutput(hasLinks):
-    list_: list[BaseOutput]
+# class SingleOutput(BaseOutput, hasLinks):
+#     pass
+
+
+# class ListOutput(hasLinks):
+#     list_: list[BaseOutput]
 
 
 ##############################################################################
-class BaseServer(BaseInputObj):
+class BaseServer(InputObj):
     @classmethod
     def base_type(cls) -> str:
         return "server"
@@ -134,7 +133,7 @@ class BaseServer(BaseInputObj):
     model_config = ObjConfig(extra="forbid")
 
 
-class BaseRoot(BaseInputObj):
+class BaseRoot(InputObj):
     @classmethod
     def base_type(cls) -> str:
         return "root"
@@ -146,7 +145,7 @@ class BaseRoot(BaseInputObj):
     model_config = ObjConfig(extra="forbid")
 
 
-class BaseElement(BaseInputObj):
+class BaseElement(InputObj):
     @classmethod
     def base_type(cls) -> str:
         return "element"
@@ -158,7 +157,7 @@ class BaseElement(BaseInputObj):
     model_config = ObjConfig(extra="forbid")
 
 
-class BaseNode(BaseInputObj):
+class BaseNode(InputObj):
     @classmethod
     def base_type(cls) -> str:
         return "node"
@@ -170,7 +169,7 @@ class BaseNode(BaseInputObj):
     model_config = ObjConfig(extra="forbid")
 
 
-class BaseItem(BaseInputObj):
+class BaseItem(InputObj):
     @classmethod
     def base_type(cls) -> str:
         return "item"
@@ -185,7 +184,7 @@ class BaseItem(BaseInputObj):
 ##############################################################################
 
 
-class EnumBaseInputObj(EnumBase):
+class EnumInputObj(EnumBase):
     @property
     def base_type(self):
         return self._get_class.base_type()
@@ -193,12 +192,17 @@ class EnumBaseInputObj(EnumBase):
     @property
     def children(self):
         return self._get_class.children()
+    
+    # def make(self, obj):
+    #     print(obj, self._get_class[self.name])
+    #     return self._get_class[self.name](**obj)
+
 
 
 load_all_plugins(os.path.dirname(__file__), "plugins")
 
-ObjEnum: Type[EnumBaseInputObj] = make_enum(BaseInputObj, EnumBaseInputObj)
+ObjEnum: Type[EnumInputObj] = make_enum(InputObj, EnumInputObj)
 
 
-def is_valid_parent(parent: EnumBaseInputObj, child: EnumBaseInputObj):
+def is_valid_parent(parent: EnumInputObj, child: EnumInputObj):
     return child.base_type in parent.children

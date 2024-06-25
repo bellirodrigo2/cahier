@@ -6,11 +6,12 @@ from cahier.database.memory_db import get_memory_db
 from cahier.repositories.memory_repo import InMemoryRepository
 from cahier.services.asset import AssetService
 
+container = {}
+
 ###############################################################################
 # SQLALCHEMY
 ###############################################################################
 
-container = {}
 
 # db_url = "sqlite:///./sql_app.db"
 # make_session = partial(sqlalchemy_bootstrap, db_url,
@@ -24,11 +25,11 @@ container = {}
 # INMEMORY
 ###############################################################################
 
-make_repo = partial(InMemoryRepository, get_memory_db)
-container["make_repo"] = make_repo
+get_repository = partial(InMemoryRepository, get_memory_db)
+container["repository"] = get_repository
 ###############################################################################
 # Make Asset Service
 ###############################################################################
 
-make_asset = partial(AssetService, get_repo=make_repo)
-container["make_asset"] = make_asset
+get_asset_service = partial(AssetService, get_repo=get_repository)
+container["asset_service"] = get_asset_service

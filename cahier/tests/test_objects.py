@@ -1,5 +1,4 @@
 """"""
-
 import pytest
 
 from cahier.schemas.schemas import ObjEnum, is_valid_parent
@@ -22,48 +21,53 @@ def test_enums():
 
 
 def test_factories_assetserver():
-    arg = "http://example.com:8000/"
+    arg = {'sourceUrl': "http://example.com:8000/"}
     o = ObjEnum.assetserver
-    m = o.make(source_url=arg)
-    assert o.value == "assetserver"
+    m = o.make(arg)
+    assert o.name == "assetserver"
+    assert o.value == "assetservers"
     assert o.base_type == "server"
-    assert str(m.source_url) == arg
+    assert str(m.source_url) == arg["sourceUrl"]
 
 
 def test_factories_database():
-    arg = "some_db_field"
+    arg = {'host': "some_db_field"}
     o = ObjEnum.database
-    m = o.make(host=arg)
-    assert o.value == "database"
+    m = o.make(arg)
+    assert o.name == "database"
+    assert o.value == "databases"
     assert o.base_type == "root"
-    assert m.host == arg
+    assert m.host == arg['host']
 
 
 def test_factories_view():
-    arg = "some_view_string"
+    arg = {'viewStr': "some_view_string"}
     o = ObjEnum.view
-    m = o.make(view_str=arg)
-    assert o.value == "view"
+    m = o.make(arg)
+    assert o.name == "view"
+    assert o.value == "views"
     assert o.base_type == "element"
-    assert m.view_str == arg
+    assert m.view_str == arg["viewStr"]
 
 
 def test_factories_node():
-    arg = "templated_NOD1E"
+    arg = {'template':"templated_NOD1E"}
     o = ObjEnum.node
-    m = o.make(template=arg)
-    assert o.value == "node"
+    m = o.make(arg)
+    assert o.name == "node"
+    assert o.value == "nodes"
     assert o.base_type == "node"
-    assert m.template == arg
+    assert m.template == arg["template"]
 
 
 def test_factories_item():
-    arg = int
+    arg = {'type':int}
     o = ObjEnum.item
-    m = o.make(type=arg)
-    assert o.value == "item"
+    m = o.make(arg)
+    assert o.name == "item"
+    assert o.value == "items"
     assert o.base_type == "item"
-    assert m.type == arg
+    assert m.type == arg["type"]
 
 
 def test_factories_assetserver_hierarchy():

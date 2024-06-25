@@ -6,8 +6,7 @@ from typing import Any, Protocol
 from pydantic import AliasGenerator, BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
-from cahier.schemas.schemas import (BaseInputObj, BaseOutput, ListOutput,
-                                    ObjEnum, WebId)
+from cahier.schemas.schemas import InputObj, ObjEnum, WebId
 
 ################################################################################
 
@@ -16,8 +15,7 @@ class SortOrder(Enum):
     Asc = "asc"
     Desc = "desc"
 
-
-class ReadAllOptions(BaseModel):
+class ReadOptions(BaseModel):
     """"""
 
     model_config = ConfigDict(
@@ -30,7 +28,6 @@ class ReadAllOptions(BaseModel):
         str_strip_whitespace=True,
         extra="forbid",
     )
-
     field_filter: list[str] | None = Field(default=None)
     field_filter_like: list[str] | None = Field(default=None)
     search_full_hierarchy: bool | None = Field(default=None)
@@ -39,11 +36,14 @@ class ReadAllOptions(BaseModel):
     start_index: int | None = Field(default=None)
     max_count: int | None = Field(default=None)
     selected_fields: list[str] | None = Field(default=None)
-
+    
+JsonReponse = dict[str, Any]
 
 class CRUDInterface(Protocol):
 
-    def read(self, webid: WebId, target_type: ObjEnum) -> BaseOutput:
+    def read(self, 
+             webid: WebId, target: ObjEnum, options: ReadOptions | None
+            ) -> JsonReponse:
         """"""
         pass
 
@@ -52,13 +52,13 @@ class CRUDInterface(Protocol):
         parent: ObjEnum,
         children: ObjEnum,
         webid: WebId,
-        query_dict: ReadAllOptions,
-    ) -> list[BaseOutput] | ListOutput:
+        options: ReadOptions,
+    ) -> list[JsonReponse] | JsonReponse:
         """"""
         pass
 
     def create(
-        self, parent: ObjEnum, children: ObjEnum, webid: WebId, obj: BaseInputObj
-    ) -> None:
+        self, parent: ObjEnum, children: ObjEnum, webid: WebId, obj: InputObj
+    ) -> WebId:
         """"""
         pass

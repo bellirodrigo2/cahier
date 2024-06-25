@@ -4,19 +4,20 @@ from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, Path, Query, Request
 
-from cahier.interfaces.crud import CRUDInterface, ReadAllOptions
-from cahier.schemas.schemas import (BaseInputObj, ListOutput, ObjEnum,
-                                    SingleOutput, WebId)
-from cahier.services.dependecy_injection import make_asset
+from cahier.interfaces.crud import CRUDInterface, ReadOptions, JsonReponse
+from cahier.schemas.schemas import InputObj, ObjEnum, WebId, Obj
+from cahier.services.dependecy_injection import get_asset_service
 
 ###############################################################################
 
-router = APIRouter(tags=[i.name for i in ObjEnum])
+router = APIRouter(
+    tags=[i.name for i in ObjEnum],
+    # dependencies=[Depends(get_logger)]
+    )
 
-
-@router.get("/{target}/{webid}", response_model=SingleOutput)
+@router.get("/{target}/{webid}")
 def read_one(
-    service: CRUDInterface = Depends(make_asset),
+    service: CRUDInterface = Depends(get_asset_service),
     target: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
     selectedFields: Annotated[str | None, Query()] = None,
@@ -27,7 +28,7 @@ def read_one(
 @router.get("/{target}/{webid}/{children}")  # , response_model=SingleOutput)
 def read_all(
     request: Request,
-    service: CRUDInterface = Depends(make_asset),
+    service: CRUDInterface = Depends(get_asset_service),
     target: ObjEnum = Path(title="..."),
     children: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
@@ -57,17 +58,17 @@ def read_all(
         parent=target,
         children=children,
         webid=webid,
-        query_dict=ReadAllOptions(**queries),
+        query_dict=ReadOptions(**queries),
     )
 
 
 @router.post("/{target}/{webid}/{children}")
 def create_one(
-    service: CRUDInterface = Depends(make_asset),
+    service: CRUDInterface = Depends(get_asset_service),
     target: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
     children: ObjEnum = Path(title="..."),
-    obj: BaseInputObj = Body(
+    obj: InputObj = Body(
         title="Node JSON object to be added to the provided webid"
     ),
 ):

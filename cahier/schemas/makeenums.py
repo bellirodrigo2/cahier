@@ -20,9 +20,8 @@ class EnumBase:
         cls = self.__class__
         return cls.__factory[self.name]
 
-    def make(self, **kwargs):
-        cls = self.__class__
-        return cls.__factory[self.name](**kwargs)
+    def make(self, obj):
+        return self._get_class(**obj)
 
 
 def get_deriveds(base_class: Type):
@@ -44,7 +43,7 @@ def make_enum(
 
     nested_classes = get_all_deriveds(base_class)
 
-    types_map = [(name(x), name(x)) for x in nested_classes]
+    types_map = [(name(x), f'{name(x)}s') for x in nested_classes]
 
     enum_base._init_class(nested_classes)
 
