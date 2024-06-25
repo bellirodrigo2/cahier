@@ -20,13 +20,10 @@ class TreeOpEnum(Enum):
 class TreeOperation(BaseModel):
     operation: TreeOpEnum
     target: WebId
-    obj_type: ObjEnum
-    obj: Obj
+    obj_type: ObjEnum | None = None
+    obj: Obj | None = None
     
-# fazer um logger
 # precisa de patch ?????
-# ja escrever no file ???? acho que sim... fazer classe entao ?
-# fazer decorator para a Tree() ????
 
 class OpLogger(Protocol):
     
@@ -57,7 +54,12 @@ class FileLogger:
             self.flush()
             
     def flush(self, filename: str | None):
+        
+        #append all the operations to file
         pass
+
+class ObjNotFound(Exception):
+    pass
 
 class TreePersis:
     
@@ -68,24 +70,46 @@ class TreePersis:
     def to_json(self):
         return self.__tree.to_json(with_data=True)    
         
-    def get_node(self, webid: WebId):
-        return self.__tree.get_node(webid)
+    def get_node(self, webid: WebId)-> Obj:
+        node = self.__tree.get_node(webid)
+        if node:
+            return node.data
+        raise ObjNotFound()
         
-    def add_node(self, type: ObjEnum, obj: Obj):
+    def add_node(self, type: ObjEnum, obj: Obj)-> None:
         """"""
         self.__tree.create_node(tag=obj.name, identifier=obj.webid, data=obj)
         op =  TreeOperation(
-                TreeOpEnum.create, target=obj.webid, obj_type=type, obj=obj
+                TreeOpEnum.Create, target=obj.webid, obj_type=type, obj=obj
             )
-        self.__logger.push()
+        self.__logger.push(op)
 
-    def update_operation(
-        self, webid: WebId, update_object: UpdateObj
-    ):
-        pass
+    def update_operation(self, webid: WebId, update_object: UpdateObj)-> None:
+        
+        obj: Obj = self.get_node(webid=webid)
+        #testa se o type esta correto ou nao ???? nao deveria
+        
+        #atualizar o OBJETO &******************************
+        op = TreeOperation(
+            operation=TreeOpEnum.Update, target=webid, obj=update_object
+        )
+        self.__logger.push(op)
+        
+#**************update e patch repete inicio da função e fim... injetar função para update x patch
 
-    def patch_operation(self, webid: WebId, update_object: UpdateObj):
-        pass
+    def patch_operation(self, webid: WebId, update_object: UpdateObj)-> None:
+        obj: Obj = self.get_node(webid=webid)
+        #testa se o type esta correto ou nao ???? nao deveria
+        
+        #atualizar o OBJETO &******************************
+        op = TreeOperation(
+            operation=TreeOpEnum.Update, target=webid, obj=update_object
+        )
+        self.__logger.push(op)
 
-    def delete_operation(self, webid: WebId):
-        pass
+    def delete_operation(self, webid: WebId)-> None:
+        self.__tree.remove_node(identifier=webid)
+        op =  TreeOperation(
+                TreeOpEnum.Delete, target=webid'
+            )
+        self.__logger.push(op)

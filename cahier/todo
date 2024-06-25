@@ -4,6 +4,8 @@
 
 fazer bootstrap, lendo arvore do arquivo... carregando
 fazer logger para arvore
+como injetar os plugins para test ??? se nao toda vez que mudar logging os testes vão quebrar
+
 
 
 
