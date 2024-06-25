@@ -1,5 +1,12 @@
 ############################################################################################
 
+#### INMEMORY
+
+fazer bootstrap, lendo arvore do arquivo... carregando
+fazer logger para arvore
+
+
+
 que camada fica filter(selected_fields) ???? e addlink ????
 
 add /v1/
@@ -13,7 +20,6 @@ em code/af esta instalado pymongo pra estudar objectid
 ID DE MONGO + INFO DE OBJ TYPE
 FAZER OS QUERY PARAMS COM CAMELCASE
 testar todos os alias_generator to_camel
-SORT_ORDER do READALLOPTIONS tem que levar pra lower() no field_validation
 
 ##############################################
 NO FILE schemas

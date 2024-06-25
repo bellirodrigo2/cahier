@@ -8,13 +8,6 @@ from cahier.schemas.schemas import InputObj, Obj, ObjEnum, WebId, is_valid_paren
 ###############################################################################
 
 
-def make_list_output():
-    pass
-
-
-def make_single_output():
-    pass
-
 
 class AssetServiceError(Exception):
     pass

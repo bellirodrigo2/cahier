@@ -2,7 +2,7 @@
 
 from functools import partial
 
-from cahier.database.memory_db import get_memory_db
+from cahier.repositories.database.memory_db import get_memory_db
 from cahier.repositories.memory_repo import InMemoryRepository
 from cahier.services.asset import AssetService
 
