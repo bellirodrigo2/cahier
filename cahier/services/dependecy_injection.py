@@ -2,8 +2,8 @@
 
 from functools import partial
 
-from cahier.repositories.database.memory_db import get_memory_db
-from cahier.repositories.memory_repo import InMemoryRepository
+from cahier.repositories.database.memory_db import get_memory_db, bootstrap
+from cahier.repositories.memorydao import InMemoryDAO
 from cahier.services.asset import AssetService
 
 container = {}
@@ -25,11 +25,15 @@ container = {}
 # INMEMORY
 ###############################################################################
 
-get_dao = partial(InMemoryRepository, get_memory_db)
+tree = bootstrap()
+get_tree = partial(get_memory_db, tree=tree)
+
+get_dao = partial(InMemoryDAO, get_tree)
 container["asset_dao"] = get_dao
+
 ###############################################################################
 # Make Asset Service
 ###############################################################################
 
-get_asset_service = partial(AssetService, get_dao=get_dao)
+get_asset_service = AssetService
 container["asset_service"] = get_asset_service

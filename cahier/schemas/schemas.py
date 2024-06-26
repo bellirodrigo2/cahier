@@ -8,7 +8,7 @@ from pydantic.alias_generators import to_camel
 
 from cahier.schemas.config import get_schema_settings
 from cahier.schemas.loader import load_all_plugins
-from cahier.schemas.makeenums import EnumBase, make_enum
+from cahier.schemas.makeenums import EnumBase, make_enum, name
 from cahier.schemas.webid import WebId, make_webid
 
 ##############################################################################
@@ -77,12 +77,16 @@ class InputObj(BaseModel):
 
     @classmethod
     def base_type(cls) -> str:
-        return "base"
+        pass
 
     @classmethod
     def children(cls) -> list[str]:
-        return []
-
+        pass
+    
+    @classmethod
+    def cls_name(cls) -> str:
+        return name(cls)
+    
     model_config = ObjConfig(extra="allow")  # to allow derived class casting
 
     name: str | None = NameField(default_factory=lambda: next(name_gen))
@@ -165,7 +169,7 @@ class BaseNode(InputObj):
     @classmethod
     def children(cls) -> list[str]:
         return ["node", "item", "element"]
-
+    
     model_config = ObjConfig(extra="forbid")
 
 

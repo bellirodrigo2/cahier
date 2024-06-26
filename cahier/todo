@@ -4,6 +4,7 @@
 
 https://pytest-with-eric.com/pytest-best-practices/pytest-logging/
 
+trabahar mais no container inject/provide
 ver o github da aula de ontem do branas pra ver interface x implementação...em quais arquivos ?
 fazer apenas inmemory....precisa fazer agora o logger e escrever no file ????
 como injetar os plugins para test ??? se nao toda vez que mudar logging os testes vão quebrar

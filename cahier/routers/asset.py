@@ -1,12 +1,14 @@
 """ Routers for Cahier Builder """
 
-from typing import Annotated
+from typing import Annotated, Callable
+from functools import partial
 
 from fastapi import APIRouter, Body, Depends, Path, Query, Request
 
 from cahier.interfaces.assetservice import AssetInterface, ReadAllOptions, JsonReponse
+from cahier.interfaces.assetdao import AssetDAOInterface
 from cahier.schemas.schemas import InputObj, ObjEnum, WebId, Obj
-from cahier.services.dependecy_injection import get_asset_service
+from cahier.services.dependecy_injection import get_asset_service, get_dao
 
 ###############################################################################
 
@@ -15,14 +17,31 @@ router = APIRouter(
     # dependencies=[Depends(get_logger)]
     )
 
+def get_service(
+        dao: AssetDAOInterface = Depends(get_dao),
+    )->Callable[[], AssetInterface]:
+    
+    return partial(get_asset_service, dao=dao)
+
 @router.get("/{target}/{webid}")
 def read_one(
-    service: AssetInterface = Depends(get_asset_service),
+    servie: AssetInterface = Depends(get_service),
     target: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
     selectedFields: Annotated[tuple[str, ...] | None, Query()] = None,
 ):
+    # service = asset_maker(dao)
     return service.read(target=target, webid=webid, selected_fields=selectedFields)
+
+
+# @router.get("/{target}/{webid}")
+# def read_one(
+#     service: AssetInterface = Depends(get_asset_service),
+#     target: ObjEnum = Path(title="..."),
+#     webid: WebId = Path(title="..."),
+#     selectedFields: Annotated[tuple[str, ...] | None, Query()] = None,
+# ):
+#     return service.read(target=target, webid=webid, selected_fields=selectedFields)
 
 
 @router.get("/{target}/{webid}/{children}")  # , response_model=SingleOutput)

@@ -6,8 +6,22 @@
             "format": "%(levelname)s: %(message)s"
         },
         "detailed": {
-            "format": "",
-            "datefmt": ""
+            "format": "[%(levelname)s|%(module)s|L%(lineno)d] %(asctime)s %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%Sz"
+        },
+        "json":{
+            "()": "logger.JSONFormatter",
+            "fmt_keys": {
+                "level": "levelname",
+                "message": "message",
+                "timestamp": "timestamp",
+                "logger": "name",
+                "module": "module",
+                "function": "funcName",
+                "line": "lineno",
+                "thread_name": "threadName"
+
+            } 
         }
     },
     "handlers": {
@@ -20,7 +34,7 @@
         "file":{
             "class": "logging.handlers.RotatingFileHandler",
             "level": "DEBUG",
-            "formatter":"detailed",
+            "formatter":"json",
             "filename": "logs/cahier.log",
             "maxBytes": 1000000,
             "backupCount": 3
@@ -30,7 +44,8 @@
         "root": {
             "level": "DEBUG", 
             "handlers": [
-                "stdout"
+                "stderr",
+                "file"
             ]
         }
     }

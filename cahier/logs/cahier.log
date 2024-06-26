@@ -1,0 +1,24 @@
+[DEBUG|logger|L24] 2024-06-26 14:35:03z DEBUG LOGGER MESSAGE 
+[ERROR|logger|L25] 2024-06-26 14:35:03z ERROR LOGGER MESSAGE
+[INFO|logger|L26] 2024-06-26 14:35:03z INFOR EERROR
+[DEBUG|logger|L24] 2024-06-26 14:35:27z DEBUG LOGGER MESSAGE 
+[ERROR|logger|L25] 2024-06-26 14:35:27z ERROR LOGGER MESSAGE
+[INFO|logger|L26] 2024-06-26 14:35:27z INFOR EERROR
+{"level": "DEBUG", "message": "DEBUG LOGGER MESSAGE ", "timestamp": "2024-06-26T18:02:47.339923+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 59, "thread_name": "MainThread"}
+{"level": "ERROR", "message": "ERROR LOGGER MESSAGE", "timestamp": "2024-06-26T18:02:47.339923+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 60, "thread_name": "MainThread"}
+{"level": "INFO", "message": "INFOR EERROR", "timestamp": "2024-06-26T18:02:47.339923+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 61, "thread_name": "MainThread"}
+{"level": "DEBUG", "message": "DEBUG LOGGER MESSAGE", "timestamp": "2024-06-26T18:04:26.389266+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 59, "thread_name": "MainThread"}
+{"level": "ERROR", "message": "ERROR LOGGER MESSAGE", "timestamp": "2024-06-26T18:04:26.389266+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 60, "thread_name": "MainThread"}
+{"level": "INFO", "message": "INFOR EERROR", "timestamp": "2024-06-26T18:04:26.389266+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 61, "thread_name": "MainThread"}
+{"level": "DEBUG", "message": "DEBUG LOGGER MESSAGE", "timestamp": "2024-06-26T18:06:59.975228+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 90, "thread_name": "MainThread", "extra1": "whateer"}
+{"level": "ERROR", "message": "ERROR LOGGER MESSAGE", "timestamp": "2024-06-26T18:06:59.975228+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 91, "thread_name": "MainThread"}
+{"level": "INFO", "message": "INFOR EERROR", "timestamp": "2024-06-26T18:06:59.975228+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 92, "thread_name": "MainThread"}
+{"level": "DEBUG", "message": "DEBUG LOGGER MESSAGE", "timestamp": "2024-06-26T18:07:12.248683+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 90, "thread_name": "MainThread", "extra1": "whateer"}
+{"level": "ERROR", "message": "ERROR LOGGER MESSAGE", "timestamp": "2024-06-26T18:07:12.248683+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 91, "thread_name": "MainThread"}
+{"level": "INFO", "message": "INFOR EERROR", "timestamp": "2024-06-26T18:07:12.264288+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 92, "thread_name": "MainThread"}
+{"level": "DEBUG", "message": "DEBUG LOGGER MESSAGE", "timestamp": "2024-06-26T18:08:41.926824+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 96, "thread_name": "MainThread", "extra1": "whateer"}
+{"level": "ERROR", "message": "ERROR LOGGER MESSAGE", "timestamp": "2024-06-26T18:08:41.926824+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 97, "thread_name": "MainThread"}
+{"level": "INFO", "message": "INFOR EERROR", "timestamp": "2024-06-26T18:08:41.939738+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 98, "thread_name": "MainThread"}
+{"level": "DEBUG", "message": "DEBUG LOGGER MESSAGE", "timestamp": "2024-06-26T18:08:58.648017+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 97, "thread_name": "MainThread", "extra1": "whateer"}
+{"level": "ERROR", "message": "ERROR LOGGER MESSAGE", "timestamp": "2024-06-26T18:08:58.648017+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 98, "thread_name": "MainThread"}
+{"level": "INFO", "message": "INFOR EERROR", "timestamp": "2024-06-26T18:08:58.648017+00:00", "logger": "root", "module": "logger", "function": "<module>", "line": 99, "thread_name": "MainThread"}

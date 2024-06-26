@@ -5,6 +5,8 @@ from uuid import UUID, uuid1
 
 # from pydantic import Field
 
+from cahier.schemas.id_.objectid import ObjectId
+
 ###############################################################################
 
 WebId = UUID
@@ -24,3 +26,13 @@ def make_webid() -> WebId:
 #             default_factory=make_webid,
 #         ),
 #     ]
+if __name__ == '__main__':
+    
+    print('ok')
+    id1 = ObjectId()
+    id2 = ObjectId()
+    
+    print(id1)
+    sid = str(id1)
+    print(len(str.encode(sid)))
+    print(len(bytes.fromhex(sid)))

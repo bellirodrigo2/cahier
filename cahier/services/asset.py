@@ -28,25 +28,23 @@ def add_link(filtered: JsonReponse, target: ObjEnum)->JsonReponse:
 class AssetService:
     """"""
 
-    def __init__(
-        self,
-        get_dao: Callable[[], AssetDAOInterface],
-    ) -> None:
-        self.__get_dao = get_dao
+    def __init__(self, dao: AssetDAOInterface,) -> None:
+        self.__dao = dao
 
     def _add_one(self, webid: WebId, obj: InputObj) -> WebId:
-        dao: AssetDAOInterface = self.__get_dao()
-        return dao.create(webid=webid, obj=obj)
+        # dao: AssetDAOInterface = self.__get_dao()
+        return self.__dao.create(webid=webid, obj=obj)
 
     def _get_one(self, webid: WebId, selected_fields: tuple[str] | None) -> JsonReponse:
-        dao: AssetDAOInterface = self.__get_dao()
-        return dao.read(webid=webid, selected_fields=selected_fields)
+        # dao: AssetDAOInterface = self.__get_dao()
+        # print('***************', dao)
+        return self.__dao.read(webid=webid, selected_fields=selected_fields)
 
     def _get_all(
         self, webid: WebId, child: ObjEnum, options: ReadAllOptions | None
     ) -> list[Obj]:
-        dao: AssetDAOInterface = self.__get_dao()
-        return dao.list(webid=webid, children=child, options=options)
+        # dao: AssetDAOInterface = self.__get_dao()
+        return self.__dao.list(webid=webid, children=child, options=options)
     
     def read(self, 
              webid: WebId, target: ObjEnum, selected_fields: tuple[str] | None = None
