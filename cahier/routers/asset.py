@@ -4,7 +4,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, Path, Query, Request
 
-from cahier.interfaces.crud import CRUDInterface, ReadOptions, JsonReponse
+from cahier.interfaces.assetservice import AssetInterface, ReadAllOptions, JsonReponse
 from cahier.schemas.schemas import InputObj, ObjEnum, WebId, Obj
 from cahier.services.dependecy_injection import get_asset_service
 
@@ -17,30 +17,30 @@ router = APIRouter(
 
 @router.get("/{target}/{webid}")
 def read_one(
-    service: CRUDInterface = Depends(get_asset_service),
+    service: AssetInterface = Depends(get_asset_service),
     target: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
-    selectedFields: Annotated[str | None, Query()] = None,
+    selectedFields: Annotated[tuple[str, ...] | None, Query()] = None,
 ):
-    return service.read(target=target, webid=webid)
+    return service.read(target=target, webid=webid, selected_fields=selectedFields)
 
 
 @router.get("/{target}/{webid}/{children}")  # , response_model=SingleOutput)
 def read_all(
     request: Request,
-    service: CRUDInterface = Depends(get_asset_service),
+    service: AssetInterface = Depends(get_asset_service),
     target: ObjEnum = Path(title="..."),
     children: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
     # https://stackoverflow.com/questions/62279710/fastapi-variable-query-parameters
-    field_filter: Annotated[list[str] | None, Query(...)] = None,
-    field_filter_like: Annotated[list[str] | None, Query(...)] = None,
+    field_filter: Annotated[tuple[str, ...] | None, Query(...)] = None,
+    field_filter_like: Annotated[tuple[str, ...] | None, Query(...)] = None,
     search_full_hierarchy: Annotated[bool | None, Query(...)] = None,
     sort_field: Annotated[str | None, Query(...)] = None,
     sort_order: Annotated[str | None, Query(...)] = None,
     start_index: Annotated[int | None, Query(...)] = None,
     max_count: Annotated[int | None, Query(...)] = None,
-    selected_fields: Annotated[list[str] | None, Query(...)] = None,
+    selected_fields: Annotated[tuple[str, ...] | None, Query(...)] = None,
 ):
 
     queries = dict(request.query_params)
@@ -58,13 +58,13 @@ def read_all(
         parent=target,
         children=children,
         webid=webid,
-        query_dict=ReadOptions(**queries),
+        query_dict=ReadAllOptions(**queries),
     )
 
 
 @router.post("/{target}/{webid}/{children}")
 def create_one(
-    service: CRUDInterface = Depends(get_asset_service),
+    service: AssetInterface = Depends(get_asset_service),
     target: ObjEnum = Path(title="..."),
     webid: WebId = Path(title="..."),
     children: ObjEnum = Path(title="..."),

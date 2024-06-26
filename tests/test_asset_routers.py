@@ -10,7 +10,7 @@ from cahier.main import app
 from cahier.routers.asset import get_asset_service
 
 from cahier.schemas.schemas import ObjEnum
-from cahier.interfaces.crud import ReadOptions
+from cahier.interfaces.assetservice import ReadAllOptions
 
 ################################################################################
 
@@ -68,7 +68,7 @@ def test_getone_ok(id, path, mock_asset_service):
     assert response.status_code == 200
     
     mock_asset_service.read.assert_called_with(
-        target_type=path, webid=UUID(id)
+        target=path, webid=UUID(id), selected_fields=None
     )
     mock_asset_service.list.assert_not_called()
 
@@ -112,7 +112,7 @@ def test_getall_ok(parent, child, mock_asset_service):
     assert response.status_code == 200
     
     mock_asset_service.list.assert_called_with(
-        parent=parent, children=child, webid=UUID(id), query_dict=ReadOptions(**{})
+        parent=parent, children=child, webid=UUID(id), query_dict=ReadAllOptions(**{})
     )
     mock_asset_service.read.assert_not_called()
 
@@ -160,7 +160,7 @@ def test_getall_ok_w_query_params(q, exp_res, mock_asset_service):
         parent=parent_path,
         children=child_parent,
         webid=UUID(id),
-        query_dict=ReadOptions(**exp_res),
+        query_dict=ReadAllOptions(**exp_res),
     )
     mock_asset_service.read.assert_not_called()
 

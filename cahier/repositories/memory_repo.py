@@ -4,7 +4,7 @@ from typing import Callable
 
 from treelib import Tree
 
-from cahier.interfaces.crud import ReadOptions, JsonReponse
+from cahier.interfaces.assetdao import ReadAllOptions, JsonReponse
 from cahier.schemas.schemas import InputObj, Obj, ObjEnum, WebId
 
 ################################################################################
@@ -31,7 +31,7 @@ class InMemoryRepository:
         parent: ObjEnum,
         children: ObjEnum,
         webid: WebId,
-        options: ReadOptions,
+        options: ReadAllOptions,
     ) -> list[JsonReponse] | JsonReponse:
 
         """"""

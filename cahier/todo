@@ -4,17 +4,12 @@
 
 https://pytest-with-eric.com/pytest-best-practices/pytest-logging/
 
-mudar o crud do asset... do repository... sao interfaces diferents...ou entao colocar um monte de | None
-crud do repositorio tem alguns argumentos a menos...que ja foram checados no asset
+ver o github da aula de ontem do branas pra ver interface x implementação...em quais arquivos ?
 fazer apenas inmemory....precisa fazer agora o logger e escrever no file ????
-fazer bootstrap, lendo arvore do arquivo... carregando
-fazer logger para arvore
 como injetar os plugins para test ??? se nao toda vez que mudar logging os testes vão quebrar
-
-
-
-
 que camada fica filter(selected_fields) ???? e addlink ????
+ID DE MONGO + INFO DE OBJ TYPE
+
 
 add /v1/
 TESTAR AF>..  E SE TIVER VAZIO ???
@@ -24,7 +19,6 @@ TESTAR AF>..  E SE TIVER VAZIO ???
 
 em code/af esta instalado pymongo pra estudar objectid
 
-ID DE MONGO + INFO DE OBJ TYPE
 FAZER OS QUERY PARAMS COM CAMELCASE
 testar todos os alias_generator to_camel
 

@@ -25,11 +25,11 @@ container = {}
 # INMEMORY
 ###############################################################################
 
-get_repository = partial(InMemoryRepository, get_memory_db)
-container["repository"] = get_repository
+get_dao = partial(InMemoryRepository, get_memory_db)
+container["asset_dao"] = get_dao
 ###############################################################################
 # Make Asset Service
 ###############################################################################
 
-get_asset_service = partial(AssetService, get_repo=get_repository)
+get_asset_service = partial(AssetService, get_dao=get_dao)
 container["asset_service"] = get_asset_service

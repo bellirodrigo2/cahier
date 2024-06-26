@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from icecream import ic
 
-from cahier.interfaces.crud import CRUDInterface, ReadOptions
+from cahier.interfaces.assetservice import AssetInterface, ReadAllOptions
 from cahier.schemas.schemas import ObjEnum, WebId
 from cahier.services.asset import AssetService
 
@@ -27,28 +27,28 @@ mock_break_repo = MagicMock()
 mock_break_repo.read.side_effect = list(reversed(oks.values()))
 
 @pytest.fixture
-def mock_asset_service()->CRUDInterface:
-    return AssetService(get_repo=lambda : mock_repo)
+def mock_asset_service()->AssetInterface:
+    return AssetService(get_dao=lambda : mock_repo)
 
 @pytest.fixture
-def mock_broken_asset_service()->CRUDInterface:
-    return AssetService(get_repo=lambda : mock_break_repo)
+def mock_broken_asset_service()->AssetInterface:
+    return AssetService(get_dao=lambda : mock_break_repo)
 
 def setup_function():
     mock_repo.reset_mock(side_effect=True)
     mock_break_repo.reset_mock()
 
 @pytest.mark.parametrize("target", oks.keys())
-def test_getone_ok(target, mock_asset_service: CRUDInterface):
+def test_getone_ok(target, mock_asset_service: AssetInterface):
 
     id = "1c8accd9-2e70-11ef-a48f-3024a9fbd4aa"
     
     o = mock_asset_service.read(webid=id, target=target)
-    mock_repo.read.assert_called_with(webid=id)
+    mock_repo.read.assert_called_with(webid=id, selected_fields=None)
     mock_repo.list.assert_not_called()
 
 @pytest.mark.parametrize("target", oks.keys())
-def test_getone_wrong_obj(target: ObjEnum, mock_broken_asset_service: CRUDInterface):
+def test_getone_wrong_obj(target: ObjEnum, mock_broken_asset_service: AssetInterface):
 
     id = "1c8accd9-2e70-11ef-a48f-3024a9fbd4aa"
     

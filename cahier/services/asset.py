@@ -2,11 +2,11 @@
 
 from typing import Any, Callable
 
-from cahier.interfaces.crud import CRUDInterface, ReadOptions, JsonReponse
+from cahier.interfaces.assetdao import AssetDAOInterface
+from cahier.interfaces.auxdata import ReadAllOptions, JsonReponse
 from cahier.schemas.schemas import InputObj, Obj, ObjEnum, WebId, is_valid_parent
 
 ###############################################################################
-
 
 
 class AssetServiceError(Exception):
@@ -19,8 +19,7 @@ def check_hierarchy(parent: ObjEnum, children: ObjEnum):
         raise AssetServiceError(err)
 
 def filter_response(obj: Obj, selected_fields: list[str] | None)-> JsonReponse:
-    return {field : obj[field] for field in selected_fields if field in obj} \
-        if selected_fields else obj
+    return {field : obj[field] for field in selected_fields if field in obj}
 
 def add_link(filtered: JsonReponse, target: ObjEnum)->JsonReponse:
     filtered['Links'] = []
@@ -31,34 +30,36 @@ class AssetService:
 
     def __init__(
         self,
-        get_repo: Callable[[], CRUDInterface],
+        get_dao: Callable[[], AssetDAOInterface],
     ) -> None:
-        self.__get_repo = get_repo
+        self.__get_dao = get_dao
 
     def _add_one(self, webid: WebId, obj: InputObj) -> WebId:
-        repo: CRUDInterface = self.__get_repo()
-        return repo.create(webid=webid, obj=obj)
+        dao: AssetDAOInterface = self.__get_dao()
+        return dao.create(webid=webid, obj=obj)
 
-    def _get_one(self, webid: WebId) -> JsonReponse:
-        repo: CRUDInterface = self.__get_repo()
-        return repo.read(webid=webid)
+    def _get_one(self, webid: WebId, selected_fields: tuple[str] | None) -> JsonReponse:
+        dao: AssetDAOInterface = self.__get_dao()
+        return dao.read(webid=webid, selected_fields=selected_fields)
 
     def _get_all(
-        self, webid: WebId, child: ObjEnum, options: ReadOptions | None
+        self, webid: WebId, child: ObjEnum, options: ReadAllOptions | None
     ) -> list[Obj]:
-        repo: CRUDInterface = self.__get_repo()
-        return repo.list(webid=webid, child=child, options=options)
+        dao: AssetDAOInterface = self.__get_dao()
+        return dao.list(webid=webid, children=child, options=options)
     
     def read(self, 
-             webid: WebId, target: ObjEnum, options: ReadOptions | None = None
+             webid: WebId, target: ObjEnum, selected_fields: tuple[str] | None = None
             ) -> JsonReponse:
         
-        obj: JsonReponse = self._get_one(webid=webid)
-        # if attributes is not a valid dict for the target Pydantic model,
+        obj: JsonReponse = self._get_one(webid=webid, selected_fields=selected_fields)
+        # if obj does not comply with the target pydantic model target Pydantic model,
         # an ValidationError is raised
+        # if parent_obj is not same model as parent, ValidationError is raised
+        ######## **** SE O ID TIVER INFO DE TYPE, ESSE GET NAO PRECISA (um query a menos)
         target.make(obj)
 
-        filtered = filter_response(obj, options.selected_fields) if options else obj
+        filtered = filter_response(obj, selected_fields) if selected_fields else obj
         return add_link(filtered, target)
 
     def list(
@@ -66,7 +67,7 @@ class AssetService:
         parent: ObjEnum,
         children: ObjEnum,
         webid: WebId,
-        options: ReadOptions,
+        options: ReadAllOptions,
     ) -> list[JsonReponse]:
         """"""
 
