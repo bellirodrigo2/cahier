@@ -2,6 +2,11 @@
 
 #### INMEMORY
 
+https://pytest-with-eric.com/pytest-best-practices/pytest-logging/
+
+mudar o crud do asset... do repository... sao interfaces diferents...ou entao colocar um monte de | None
+crud do repositorio tem alguns argumentos a menos...que ja foram checados no asset
+fazer apenas inmemory....precisa fazer agora o logger e escrever no file ????
 fazer bootstrap, lendo arvore do arquivo... carregando
 fazer logger para arvore
 como injetar os plugins para test ??? se nao toda vez que mudar logging os testes vão quebrar

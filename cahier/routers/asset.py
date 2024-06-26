@@ -22,7 +22,7 @@ def read_one(
     webid: WebId = Path(title="..."),
     selectedFields: Annotated[str | None, Query()] = None,
 ):
-    return service.read(target_type=target, webid=webid)
+    return service.read(target=target, webid=webid)
 
 
 @router.get("/{target}/{webid}/{children}")  # , response_model=SingleOutput)
